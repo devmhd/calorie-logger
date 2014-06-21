@@ -12,8 +12,12 @@
 // For women, the BMR equation is: BMR = 655 + (9.6 x weight in kg.) + (1.8 x height in cm) - (4.7 x age in years).
 
 
-
-
+var activityRunMinute;
+var activityRunSecond;
+var activityRunning;
+var runningAvtivityType;
+var _runningTimer, minString, secString;
+var _btnActivityFinish;
 
 var crossedCalLimit;
 var _bigCalCountH, timeStr, todayCalorieNeed;
@@ -22,9 +26,10 @@ var _slFood, _slFoodType, _calPerUnit, _unit, _slFoodAmount, _singleFoodTotal, _
 var _prefWeight, _prefHeight, _prefSex, _prefAge, _prefBtnSave, _prefActivity;
 var _welWeight, _welHeight, _welSex, _welAge, _welBtnSave, _welActivity;
 var _extraCal, _swalktime, _mwalktime, _fwalktime, _cycletime, _runtime, _jogtime, _swimtime;
-
-
+var _startswalk, _startmwalk, _startfwalk, _startcycle, _startrun, _startjog, _startswim;
 var currentFoods, selectedFood;
+
+
 
 //function 
 
@@ -258,10 +263,6 @@ window.onload = function(){
 		}, true);
 	});
 
-	$$('#litouch').swipeRight(function(evt){
-		console.log('swipe right');
-	});
-
 
 	_slFood = document.querySelector("#slFood");
 	_slFoodType = document.querySelector("#slFoodType");
@@ -301,6 +302,17 @@ window.onload = function(){
 	_runtime = document.querySelector('#runtime');
 	_jogtime = document.querySelector('#jogtime');
 	_swimtime = document.querySelector('#swimtime');
+
+	_startswalk = document.querySelector('#startswalk');
+	_startmwalk = document.querySelector('#startmwalk');
+	_startfwalk = document.querySelector('#startfwalk');
+	_startcycle = document.querySelector('#startcycle');
+	_startrun = document.querySelector('#startrun');
+	_startjog = document.querySelector('#startjog');
+	_startswim = document.querySelector('#startswim');
+
+	_runningTimer = document.querySelector('#runningTimer');
+	_btnActivityFinish = document.querySelector('#btnActivityFinish');
 
 
 	if (localStorage.getItem("notForFirstTime") === null){
@@ -368,8 +380,15 @@ window.onload = function(){
 
 	document.querySelector('#backButtonSuggest').addEventListener ('click', function (){
 
-		document.querySelector('#homePage').className = 'current';
-		document.querySelector('#suggestPage').className = 'right';
+
+		refreshTodaysList(function(){
+
+			document.querySelector('#homePage').className = 'current';
+			document.querySelector('#suggestPage').className = 'right';
+
+		}, false);
+
+		
 
 	});
 
@@ -532,12 +551,129 @@ window.onload = function(){
 		}, true);
 
 
+	});
 
 
+	_startswalk.addEventListener('click', function(){
+		showActivityTimer('s_walk');
 
+	});
+	_startmwalk.addEventListener('click', function(){
+		showActivityTimer('m_walk');
+
+	});
+	_startfwalk.addEventListener('click', function(){
+		showActivityTimer('f_walk');
+
+	});
+	_startcycle.addEventListener('click', function(){
+		showActivityTimer('cycle');
+
+	});
+	_startrun.addEventListener('click', function(){
+		showActivityTimer('run');
+
+	});
+	_startjog.addEventListener('click', function(){
+		showActivityTimer('jog');
+
+	});
+	_startswim.addEventListener('click', function(){
+		showActivityTimer('swim');
 
 	});
 
+	_btnActivityFinish.addEventListener('click', function(evt){
+
+		evt.preventDefault();
+
+		finishCurrentActivity();
+		refreshSuggestions();
+		document.querySelector('#confirm').className = 'fade-out';
+
+	});
+
+	
+
+}
+
+
+function activityRun(){
+
+	activityRunSecond++;
+
+	if(activityRunSecond == 60){
+		activityRunSecond = 0;
+		activityRunMinute++;
+	}
+
+	if (activityRunSecond<10) secString = "0" + activityRunSecond;
+	else secString = "" + activityRunSecond;
+
+	if (activityRunMinute<10) minString = "0" + activityRunMinute;
+	else minString = "" + activityRunMinute;
+
+
+	_runningTimer.innerHTML = minString + ":" + secString;
+
+	if(activityRunning){
+		setTimeout(activityRun, 1000);
+	}
+
+}
+
+
+function prepareTimer(activity){
+
+	if(activity === 's_walk') document.querySelector('#runningActivityName').innerHTML = 'slow walking';
+	if(activity === 'm_walk') document.querySelector('#runningActivityName').innerHTML = 'walking';
+	if(activity === 'f_walk') document.querySelector('#runningActivityName').innerHTML = 'fast walking';
+	if(activity === 'jog') document.querySelector('#runningActivityName').innerHTML = 'jogging';
+	if(activity === 'swim') document.querySelector('#runningActivityName').innerHTML = 'swimming';
+	if(activity === 'run') document.querySelector('#runningActivityName').innerHTML = 'running';
+	if(activity === 'cycle') document.querySelector('#runningActivityName').innerHTML = 'cycling';
+
+	activityRunSecond = 0;
+	activityRunMinute = 0;
+
+	activityRunning = true;
+	runningAvtivityType = activity;
+
+	_runningTimer.innerHTML = '00:00';
+
+	setTimeout(activityRun, 1000);
+}
+
+
+function finishCurrentActivity(){
+
+	activityRunning = false;
+
+	var burntPerMinute = calCosts[runningAvtivityType];
+
+	var totalBurnt = burntPerMinute * activityRunMinute + burntPerMinute/60.0*activityRunSecond;
+
+	console.log("before: " + localStorage.calorieNeed);
+
+	localStorage.calorieNeed = 	parseInt(localStorage.calorieNeed) + parseInt(totalBurnt);
+
+	console.log("after: " + localStorage.calorieNeed);
+
+	console.log('totalBurnt :' + totalBurnt );
+
+
+
+}
+
+function showActivityTimer(activity){
+
+	prepareTimer(activity);
+
+	document.querySelector('#confirm').className = 'fade-in';
+	
+	// document.querySelector('#confirm').addEventListener ('click', function () {
+	// 	this.className = 'fade-out';
+	// });
 }
 
 

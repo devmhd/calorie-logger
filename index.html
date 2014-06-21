@@ -13,6 +13,7 @@
   <link href="assets/buildingblocks/style/lists.css" rel="stylesheet" type="text/css">
   <link href="assets/buildingblocks/style/buttons.css" rel="stylesheet" type="text/css">
   <link href="assets/buildingblocks/style/input_areas.css" rel="stylesheet" type="text/css">
+  <link href="assets/buildingblocks/style/confirm.css" rel="stylesheet" type="text/css">
 
   <link rel="stylesheet" href="assets/style/animate.css">
   <link rel="stylesheet" href="assets/style/appstyle.css">
@@ -22,12 +23,6 @@
 
 </head>
 <body>
-
-
-
-
-
-
 
 
   <section role="region" id="homePage" data-position="current">
@@ -236,7 +231,7 @@
   <header class="fixed">
 
    <menu type="toolbar">
-       <a id='btnSaveWelcome' href="#"><span class="icon icon-add">add</span></a>
+       <a id='btnSaveWelcome' href="#"><span class="">Done</span></a>
     </menu>
     <h1>হাই</h1>
   </header>
@@ -312,13 +307,13 @@
     <section role="region" class="suggestRegion">
     <h1 class='suggestHeader'>অতিরিক্ত <span id="extraCal">1000</span> KCal প্রশমিত করতে আপনি নিচের যেকোন একটি কাজ করতে পারেন । </h1>
     <ul>
-      <li>1. <span id="swalktime">12</span> মিনিট ধীরে হাটা । </li>
-      <li>2. <span id="mwalktime">12</span> মিনিট মধ্যম গতিতে হাটা । </li>
-      <li>3. <span id="fwalktime">12</span> মিনিট দ্রুত হাটা । </li>
-      <li>4. <span id="cycletime">12</span> মিনিট সাইকেল চালানো । </li>
-      <li>5. <span id="runtime">12</span> মিনিট দৌড়ান । </li>
-      <li>6. <span id="jogtime">12</span> মিনিট জগিং । </li>
-      <li>7. <span id="swimtime">12</span> মিনিট সাতার। </li>
+      <li>1. <span id="swalktime">12</span> মিনিট ধীরে হাটা । <button id="startswalk">Start</button></li>
+      <li>2. <span id="mwalktime">12</span> মিনিট মধ্যম গতিতে হাটা । <button id="startmwalk">Start</button></li>
+      <li>3. <span id="fwalktime">12</span> মিনিট দ্রুত হাটা । <button id="startfwalk">Start</button></li>
+      <li>4. <span id="cycletime">12</span> মিনিট সাইকেল চালানো । <button id="startcycle">Start</button></li>
+      <li>5. <span id="runtime">12</span> মিনিট দৌড়ান । <button id="startrun">Start</button></li>
+      <li>6. <span id="jogtime">12</span> মিনিট জগিং । <button id="startjog">Start</button></li>
+      <li>7. <span id="swimtime">12</span> মিনিট সাতার। <button id="startswim">Start</button></li>
     </ul>
     </section>
   </article>
@@ -326,11 +321,20 @@
 
 
 
+ <section id="confirm" data-position="back" class="fullscreen">
+    <form role="dialog" data-type="confirm">
+      <section>
+        <h1>You are <span id="runningActivityName">running</span> for</h1>
+        <h1 id='runningTimer'>00.00</h1>
+      </section>
+      <menu>
+        <button id='btnActivityFinish' >Finish</button>
+      </menu>
+    </form>
+  </section>
 
 
 
-
-<script type="text/javascript" src="assets/js/quo.js"></script>
 <script type="text/javascript" src="assets/js/moment.js"></script>
 
 <script type="text/javascript" src="assets/js/db.js"></script>

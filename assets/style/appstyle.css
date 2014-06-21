@@ -193,3 +193,16 @@ h1.suggestHeader{
 
 	margin-top: 1em;
 }
+
+
+form[role="dialog"][data-type="confirm"] > section {
+	text-align: center;
+}
+
+form[role="dialog"][data-type="confirm"] > section h1{
+	font-size: 1em;
+}
+
+form[role="dialog"][data-type="confirm"] > section h1#runningTimer{
+	font-size: 2em;
+}
