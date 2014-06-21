@@ -1,5 +1,5 @@
 {
-  "name": "Calorimeter",
+  "name": "Calorie Logger",
   "description": "Keep track of your calorie intakes",
   "launch_path": "/index.html",
   "icons": {
