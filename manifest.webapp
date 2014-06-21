@@ -1,0 +1,13 @@
+{
+  "name": "Calorimeter",
+  "description": "Keep track of your calorie intakes",
+  "launch_path": "/index.html",
+  "icons": {
+    "128": "/img/icon-128.png"
+  },
+  "developer": {
+    "name": "Mehedee Zaman",
+    "url": "codehoundbd.com"
+  },
+  "default_locale": "en"
+}

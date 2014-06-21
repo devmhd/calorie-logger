@@ -1,0 +1,195 @@
+@font-face {
+  font-family: 'OpenSansLight';
+  src: url('../fonts/Open_Sans/OpenSans-Light.ttf')  format('truetype') /* Safari, Android, iOS */
+}
+
+body{
+	font-family: 'OpenSansLight';
+}
+
+
+select{
+	font-style: normal;
+	height: 5rem;
+	padding: 1rem;
+}
+
+/*
+html{
+
+		display: flex;
+	flex-direction: column;
+	padding: 0;
+
+}
+
+
+body{
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	font-family: 'OpenSansLight'
+
+}
+
+div{
+	display: flex;
+	flex-direction: column;
+	margin: 0;
+	padding: 0;
+}
+
+section[role="region"] > header:first-child h1 {
+    font-style: normal;
+    text-align: left;
+}
+
+section[role="region"] > header:first-child menu .fa{
+	font-size: 1.3em;
+	color: white;
+}
+
+[data-type="list"] {
+    padding: 0;
+}
+
+[data-type="list"] header {
+    padding: 0 1.5rem;
+    border-bottom: 1px solid #FF4E00;
+  
+}
+
+[data-type="list"] ul {
+    padding: 0px 1.5rem;
+
+}
+
+section[role="region"] > header:first-child a, section[role="region"] > header:first-child button {
+    min-width: 2rem;
+}
+*/
+.bigCalCount{
+
+	font-size: 1.3em;
+}
+
+
+.bigCalCount h1{
+	text-align: center;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.bigCalCount span#todayTotalCalCount{
+	font-size: 2em;
+	color: #008EAB;
+	text-align: center;
+	margin-top: 0;
+	margin-bottom: 0.5em;
+	font-weight: lighter;
+
+}
+
+.bigCalCount h5{
+	font-size: 1.5em;
+	font-weight: lighter;
+	color: #00AACC;
+	text-align: center;
+	margin-bottom: 2px;
+
+}
+
+[data-type="list"] li p{
+	padding-left: 0;
+}
+
+[data-type="list"] li p:first-of-type {
+	font-size: 0.8em;
+}
+
+/*.foodlist header h6{
+	background: #2C393B;
+	padding: 10px;
+	margin: 0;
+	font-size: 1em;
+	color: white;
+	text-align: center;
+}*/
+
+.liCalCount{
+font-size: 1.6em;
+padding: 2rem;
+color: #FF4E00;
+}
+
+.liCalCount span{
+	font-size: 0.6em;
+}
+
+section[role="region"] .content [data-type="list"] header {
+    margin: 0;
+    margin-top: 1em;
+    border-bottom: 1px solid #f97c17;
+}
+
+
+
+
+.calPerFood h2{
+    text-align: center;
+    font-size: 1.8em;
+    font-weight: lighter;
+}
+
+.calPerFood small{
+	color: #979797;
+}
+
+.singleFoodCalCount{
+	text-align: center;
+	font-weight: lighter;
+	font-size: 2.4em;
+
+}
+
+
+.singleFoodCalCount h5{
+	margin-top: 0.5em;
+    margin-bottom: 0;
+    font-weight: lighter;
+
+}
+
+.singleFoodCalCount h1 {
+    margin-top: 0;
+	margin-bottom: 0.2em;
+    font-weight: lighter;
+    font-size: 2.5em;
+}
+
+.singleFoodCalCount small{
+	color: #979797;
+}
+
+form h2{
+	margin-top: 1em;
+	margin-bottom: 0.3em;
+}
+
+h1.suggestHeader{
+	margin-top: 0;
+}
+
+.suggestRegion span{
+	color: #FF4E00;
+}
+
+#seeSuggestPage{
+	display: none;
+}
+
+#btnSeeHistory{
+
+	margin-top: 1em;
+}

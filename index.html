@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no" />
+  <title></title>
+
+
+  <link href="assets/buildingblocks/util.css" rel="stylesheet" type="text/css">
+  <link href="assets/buildingblocks/transitions.css" rel="stylesheet" type="text/css">
+  <link href="assets/buildingblocks/style/headers.css" rel="stylesheet" type="text/css">
+  <link href="assets/buildingblocks/style/lists.css" rel="stylesheet" type="text/css">
+  <link href="assets/buildingblocks/style/buttons.css" rel="stylesheet" type="text/css">
+  <link href="assets/buildingblocks/style/input_areas.css" rel="stylesheet" type="text/css">
+
+  <link rel="stylesheet" href="assets/style/animate.css">
+  <link rel="stylesheet" href="assets/style/appstyle.css">
+
+
+  <link href="assets/buildingblocks/default.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+
+
+
+
+
+
+
+
+  <section role="region" id="homePage" data-position="current">
+
+    <header class="fixed">
+     <menu type="toolbar">
+       <a id='addButtonHome' href="#"><span class="icon icon-add">add</span></a>
+       <a id='btnSeeSettings' href="#"><span class="icon icon-menu">Preferences</span></a>
+     </menu>
+     <h1>ক্যালরি লগ</h1>
+   </header>
+
+   <article class="content scrollable header">
+    <section role="region">
+      <div class="bigCalCount">
+        <h5>আজ গৃহীত ক্যালরি</h5>
+        <h1><span id='todayTotalCalCount'>
+          00
+        </span> / <small id='calorieNeedToday'>00</small></h1>
+        <button id='seeSuggestPage' >এখন কি করব?</button>
+      </div>
+
+      <section data-type="list">
+        <header>আজ গৃহীত খাবার</header>
+        <ul id='todayFoodList'>
+
+
+
+        </ul>
+
+        <button id='btnSeeHistory'>আরও আগের খাবার দেখুন</button>
+
+
+
+      </section>
+    </section>
+  </article>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+<section role="region" id="addPage" data-position="right">
+  <header class="fixed">
+    <button id='backButtonAdd'><span class="icon icon-back">close</span></button>
+    <menu type="toolbar">
+     <a id='btnAddFood' href="#"><span class="icon icon-add">add</span></a>
+   </menu>
+   <h1>নতুন খাবার</h1>
+ </header>
+
+ <article class="content scrollable header">
+  <section role="region">
+
+    <select id='slFoodType'>
+      <option value='0'>খাবারের ধরন</option>
+      <option value='1'>শাকসবজি ও ভর্তা</option>
+      <option value='2'>মাছ মাংস</option>
+      <option value='3'>ভাত ও রুটি</option>
+      <option value='4'>ডিম </option>
+      <option value='5'>বিরিয়ানি ও পোলাউ</option>
+      <option value='6'>ডাল</option>
+      <option value='7'>ফাস্টফুড</option>
+      <option value='8'>চা ও কফি</option>
+      <option value='9'>নাশতা</option>
+      <option value='10'>বাদাম </option>
+      <option value='11'>পিঠা</option>
+      <option value='12'>পানীয়</option>
+      <option value='13'>মিষ্টি ও মিষ্টিজাতীয় </option>
+      <option value='14'>ফলমূল</option>
+      <option value='15'>সালাদ</option>
+      <option value='16'>বেকারি আইটেমস</option>
+    </select>
+
+    <select id='slFood'></select>
+
+    <div class="calPerFood">
+      <h2> <span id="calPerUnit">00</span> KCal <small><span id="unit"></span></small></h2>
+    </div>
+
+    <select id="slFoodAmount"></select>
+
+    <div class="singleFoodCalCount">
+      <h5>মোট</h5>
+      <h1><span  id='singleFoodTotal' >00</span><small>KCal</small></h1>
+    </div>
+    
+  </section>
+</article>
+</section>
+
+
+
+
+
+
+<section role="region" id="historyPage" data-position="right">
+
+  <header class="fixed">
+    <button id='backButtonHistory'><span class="icon icon-back">close</span></button>
+
+    <h1>সব খাবার</h1>
+  </header>
+
+  <article class="content scrollable header">
+    <section role="region">
+
+      <section data-type="list">
+        <ul id='foodHistory'>
+        </ul>
+
+      </section>
+    </section>
+  </article>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section role="region" id="settingsPage" data-position="right">
+
+  <header class="fixed">
+    <button id='backButtonSettings'><span class="icon icon-back">close</span></button>
+
+    <h1>আমার তথ্য</h1>
+  </header>
+
+  <article class="content scrollable header">
+    <section role="region">
+
+      <form>
+        <h2>আমি</h2>
+       <p>
+          
+          <select id='prefSex'>
+            <option value='m'>পুরুষ</option>
+            <option value='f'>মহিলা</option>
+          </select>
+        </p>
+
+        <h2>বয়স</h2>
+        <p>
+          
+          <input id='prefAge' type="text" placeholder="(বছর)" required="">
+        </p>
+
+        <h2>ওজন</h2>
+        <p>
+            
+          <input id='prefWeight' type="text" placeholder="(কেজিতে)" required="">
+        </p>
+
+        <h2>উচ্চতা</h2>
+        <p>
+            
+          <input id='prefHeight' type="text" placeholder="(সেন্টিমিটার)" required="">
+        </p>
+
+        <h2>কাজের ধরন</h2>
+        <p>
+            
+         <select id='prefActivity'>
+            <option value='1.2'>অলস (খুব সামান্য ব্যায়াম)</option>
+            <option value='1.375'>অল্প পরিশ্রম (অল্প ব্যায়াম/সপ্তাহে ১-৩ দিন খেলাধুলা)</option>
+            <option value='1.55'>মধ্যম পরিশ্রম (অল্প ব্যায়াম/সপ্তাহে ৩-৫ দিন খেলাধুলা)</option>
+            <option value='1.725'>বেশি পরিশ্রম (বেশি ব্যায়াম/সপ্তাহে ৬-৭ দিন খেলাধুলা)</option>
+            <option value='1.9'>অত্যধিক পরিশ্রম (অত্যধিক ব্যায়াম/পেশাদার খেলোয়াড়/কায়িক পরিশ্রম)</option>
+          </select>
+        </p>
+
+        <button id='prefBtnSave'>সংরক্ষণ</button>
+      </form>
+
+
+    </section>
+  </article>
+</section>
+
+
+
+
+
+
+
+
+<section role="region" id="welcomePage" data-position="right">
+
+  <header class="fixed">
+
+   <menu type="toolbar">
+       <a id='btnSaveWelcome' href="#"><span class="icon icon-add">add</span></a>
+    </menu>
+    <h1>হাই</h1>
+  </header>
+
+  <article class="content scrollable header">
+    <section role="region">
+    <h1>শুরু করার আগে কিছু তথ্য দিন</h1>
+      <form>
+        <h2>আমি</h2>
+       <p>
+          
+          <select id='welSex'>
+            <option value='m'>পুরুষ</option>
+            <option value='f'>মহিলা</option>
+          </select>
+        </p>
+
+        <h2>বয়স</h2>
+        <p>
+          
+          <input id='welAge' type="text" placeholder="(বছরে)" required="">
+        </p>
+        <h2>ওজন</h2>
+        <p>
+            
+          <input id='welWeight' type="text" placeholder="(কেজিতে)" required="">
+        </p>
+
+        <h2>উচ্চতা</h2>
+        <p>
+            
+          <input id='welHeight' type="text" placeholder="(সেন্টিমিটার এ )" required="">
+        </p>
+
+        <h2>কাজের ধরন</h2>
+        <p>
+            
+          <select id='welActivity'>
+            <option value='1.2'>অলস (খুব সামান্য ব্যায়াম)</option>
+            <option value='1.375'>অল্প পরিশ্রম (অল্প ব্যায়াম/সপ্তাহে ১-৩ দিন খেলাধুলা)</option>
+            <option value='1.55'>মধ্যম পরিশ্রম (অল্প ব্যায়াম/সপ্তাহে ৩-৫ দিন খেলাধুলা)</option>
+            <option value='1.725'>বেশি পরিশ্রম (বেশি ব্যায়াম/সপ্তাহে ৬-৭ দিন খেলাধুলা)</option>
+            <option value='1.9'>অত্যধিক পরিশ্রম (অত্যধিক ব্যায়াম/পেশাদার খেলোয়াড়/কায়িক পরিশ্রম)</option>
+          </select>
+        </p>
+      </form>
+
+    </section>
+  </article>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<section role="region" id="suggestPage" data-position="right">
+
+  <header class="fixed">
+    <button id='backButtonSuggest'><span class="icon icon-back">close</span></button>
+
+    <h1>এখন কি করবেন?</h1>
+  </header>
+
+  <article class="content scrollable header">
+    <section role="region" class="suggestRegion">
+    <h1 class='suggestHeader'>অতিরিক্ত <span id="extraCal">1000</span> KCal প্রশমিত করতে আপনি নিচের যেকোন একটি কাজ করতে পারেন । </h1>
+    <ul>
+      <li>1. <span id="swalktime">12</span> মিনিট ধীরে হাটা । </li>
+      <li>2. <span id="mwalktime">12</span> মিনিট মধ্যম গতিতে হাটা । </li>
+      <li>3. <span id="fwalktime">12</span> মিনিট দ্রুত হাটা । </li>
+      <li>4. <span id="cycletime">12</span> মিনিট সাইকেল চালানো । </li>
+      <li>5. <span id="runtime">12</span> মিনিট দৌড়ান । </li>
+      <li>6. <span id="jogtime">12</span> মিনিট জগিং । </li>
+      <li>7. <span id="swimtime">12</span> মিনিট সাতার। </li>
+    </ul>
+    </section>
+  </article>
+</section>
+
+
+
+
+
+
+
+<script type="text/javascript" src="assets/js/quo.js"></script>
+<script type="text/javascript" src="assets/js/moment.js"></script>
+
+<script type="text/javascript" src="assets/js/db.js"></script>
+<script type="text/javascript" src="assets/js/allfood.js"></script>
+<script type="text/javascript" src="assets/js/app.js"></script>
+
+</body>
+</html>
