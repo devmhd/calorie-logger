@@ -170,6 +170,14 @@ section[role="region"] > header:first-child button:focus {
   Icons
 ---------------------------------- */
 
+section[role="region"] > header:first-child .icon-settings {
+  background-image: url(headers/images/icons/settings.png);
+}
+
+section[role="region"] > header:first-child .icon-chart {
+  background-image: url(headers/images/icons/chart.png);
+}
+
 section[role="region"] > header:first-child .icon-add {
   background-image: url(headers/images/icons/add.png);
 }

@@ -1,14 +1,25 @@
 {
+
   "name": "Calorie Logger",
+
   "description": "Keep track of your calorie intakes",
+
   "launch_path": "/index.html",
+
   "icons": {
-    "128": "icon-128.png",
-    "256": "icon-256.png"
+    "32": "/app_icon/icon-32.png",
+    "48": "/app_icon/icon-48.png",
+    "60": "/app_icon/icon-60.png",
+    "64": "/app_icon/icon-64.png",
+    "90": "/app_icon/icon-90.png",
+    "120": "/app_icon/icon-120.png",
+    "128": "/app_icon/icon-128.png",
+    "256": "/app_icon/icon-256.png"
   },
+
   "developer": {
-    "name": "Mehedee Zaman",
-    "url": "codehoundbd.com"
+    "name": "Mehedee Zaman"
   },
+
   "default_locale": "en"
 }

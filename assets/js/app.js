@@ -1,37 +1,3 @@
-// Harris Benedict Formula
-// To determine your total daily calorie needs, multiply your BMR by the appropriate activity factor, as follows:
-
-// If you are sedentary (little or no exercise) : Calorie-Calculation = BMR x 1.2
-// If you are lightly active (light exercise/sports 1-3 days/week) : Calorie-Calculation = BMR x 1.375
-// If you are moderatetely active (moderate exercise/sports 3-5 days/week) : Calorie-Calculation = BMR x 1.55
-// If you are very active (hard exercise/sports 6-7 days a week) : Calorie-Calculation = BMR x 1.725
-// If you are extra active (very hard exercise/sports & physical job or 2x training) : Calorie-Calculation = BMR x 1.9
-
-
-// Use the BMR equation for males. For men, the equation for calculating BMR is: BMR = 66 + (13.8 x weight in kg.) + (5 x height in cm) - (6.8 x age in years)
-// For women, the BMR equation is: BMR = 655 + (9.6 x weight in kg.) + (1.8 x height in cm) - (4.7 x age in years).
-
-
-var activityRunMinute;
-var activityRunSecond;
-var activityRunning;
-var runningAvtivityType;
-var _runningTimer, minString, secString;
-var _btnActivityFinish;
-
-var crossedCalLimit;
-var _bigCalCountH, timeStr, todayCalorieNeed;
-
-var _slFood, _slFoodType, _calPerUnit, _unit, _slFoodAmount, _singleFoodTotal, _singleFoodTotal, _btnAddFood, _todayFoodList, _todayTotalCalCount, __foodHistory, _calorieNeedToday;
-var _prefWeight, _prefHeight, _prefSex, _prefAge, _prefBtnSave, _prefActivity;
-var _welWeight, _welHeight, _welSex, _welAge, _welBtnSave, _welActivity;
-var _extraCal, _swalktime, _mwalktime, _fwalktime, _cycletime, _runtime, _jogtime, _swimtime;
-var _startswalk, _startmwalk, _startfwalk, _startcycle, _startrun, _startjog, _startswim;
-var currentFoods, selectedFood;
-
-
-
-//function 
 
 function getDailyCalorieNeed(sex, weight, height, activity, age){
 
@@ -89,9 +55,102 @@ function countUp(selector) {
 	maxnum = parseInt(_bigCalCountH.innerHTML);
 	_bigCalCountH.innerHTML = "0";
 	num = 0;
-	todayCalorieNeed = localStorage.calorieNeed;
+	todayCalorieNeed = localStorage.todaysCalorieNeed;
+
+	console.log(localStorage.todaysCalorieNeed);
 	runUp();
 }
+
+
+
+function activityRun(){
+
+	activityRunSecond++;
+
+	if(activityRunSecond == 60){
+		activityRunSecond = 0;
+		activityRunMinute++;
+	}
+
+	if (activityRunSecond<10) secString = "0" + activityRunSecond;
+	else secString = "" + activityRunSecond;
+
+	if (activityRunMinute<10) minString = "0" + activityRunMinute;
+	else minString = "" + activityRunMinute;
+
+
+	_runningTimer.innerHTML = minString + ":" + secString;
+
+	if(activityRunning){
+		setTimeout(activityRun, 1000);
+	}
+
+}
+
+
+function prepareTimer(activity){
+
+	if(activity === 's_walk') document.querySelector('#runningActivityName').innerHTML = 'slow walking';
+	if(activity === 'm_walk') document.querySelector('#runningActivityName').innerHTML = 'walking';
+	if(activity === 'f_walk') document.querySelector('#runningActivityName').innerHTML = 'fast walking';
+	if(activity === 'jog') document.querySelector('#runningActivityName').innerHTML = 'jogging';
+	if(activity === 'swim') document.querySelector('#runningActivityName').innerHTML = 'swimming';
+	if(activity === 'run') document.querySelector('#runningActivityName').innerHTML = 'running';
+	if(activity === 'cycle') document.querySelector('#runningActivityName').innerHTML = 'cycling';
+
+	activityRunSecond = 0;
+	activityRunMinute = 0;
+
+	activityRunning = true;
+	runningAvtivityType = activity;
+
+	_runningTimer.innerHTML = '00:00';
+
+	cpuLock = navigator.requestWakeLock('cpu');
+
+	setTimeout(activityRun, 1000);
+}
+
+
+function finishCurrentActivity(){
+
+	activityRunning = false;
+
+	var burntPerMinute = calCosts[runningAvtivityType];
+
+	var totalBurnt = burntPerMinute * activityRunMinute + burntPerMinute/60.0*activityRunSecond;
+
+	console.log("before: " + localStorage.todaysCalorieNeed);
+
+	console.log(localStorage.todaysCalorieNeed);
+
+	localStorage.todaysCalorieNeed = 	parseInt(localStorage.todaysCalorieNeed) + parseInt(totalBurnt);
+
+	console.log(localStorage.todaysCalorieNeed);
+
+	console.log("after: " + localStorage.todaysCalorieNeed);
+
+	console.log(localStorage.todaysCalorieNeed);
+
+	console.log('totalBurnt :' + totalBurnt );
+
+	cpuLock.unlock();
+
+
+
+}
+
+function showActivityTimer(activity){
+
+	prepareTimer(activity);
+
+	document.querySelector('#confirm').className = 'fade-in';
+	
+}
+
+
+
+
 
 
 function refreshTodaysList(callback, first){
@@ -171,7 +230,9 @@ function populateTodayList(foods, first){
 
 	_todayTotalCalCount.innerHTML = todaysTotal;
 
-	if(todaysTotal > parseInt(localStorage.calorieNeed) && !first){
+	if(todaysTotal > parseInt(localStorage.todaysCalorieNeed) && !first){
+
+		console.log(localStorage.todaysCalorieNeed);
 
 
 		_todayTotalCalCount.style.color = "red";
@@ -182,7 +243,9 @@ function populateTodayList(foods, first){
 
 	}
 
-	_calorieNeedToday.innerHTML = localStorage.calorieNeed;
+	_calorieNeedToday.innerHTML = localStorage.todaysCalorieNeed;
+
+	console.log(localStorage.todaysCalorieNeed);
 	localStorage['tadaysCalorie'] = todaysTotal;
 
 
@@ -234,7 +297,9 @@ function populateHistory(foods){
 function refreshSuggestions(){
 
 	var today = parseInt(localStorage.tadaysCalorie);
-	var max = parseInt(localStorage.calorieNeed);
+	var max = parseInt(localStorage.todaysCalorieNeed);
+
+	console.log(localStorage.todaysCalorieNeed);
 
 	var diff = today - max;
 
@@ -253,16 +318,7 @@ function refreshSuggestions(){
 }
 
 
-
-window.onload = function(){
-
-
-	calDB.open(function(){
-		refreshTodaysList(function(){
-			countUp("#todayTotalCalCount");
-		}, true);
-	});
-
+function queryDom(){
 
 	_slFood = document.querySelector("#slFood");
 	_slFoodType = document.querySelector("#slFoodType");
@@ -314,29 +370,25 @@ window.onload = function(){
 	_runningTimer = document.querySelector('#runningTimer');
 	_btnActivityFinish = document.querySelector('#btnActivityFinish');
 
-
-	if (localStorage.getItem("notForFirstTime") === null){
-
-		document.querySelector('#welcomePage').className = 'current';
-		document.querySelector('#homePage').className = 'left';
-	}
-	
+}
 
 
-	document.querySelector('#addButtonHome').addEventListener ('click', function (){
+function addNavBtnListeners(){
+
+	document.querySelector('#addButtonHome').addEventListener ('touchend', function (){
 
 		document.querySelector('#addPage').className = 'current';
 		document.querySelector('#homePage').className = 'left';
 	});
 
-	document.querySelector('#backButtonAdd').addEventListener ('click', function (){
+	document.querySelector('#backButtonAdd').addEventListener ('touchend', function (){
 
 		document.querySelector('#homePage').className = 'current';
 		document.querySelector('#addPage').className = 'right';
 
 	});
 
-	document.querySelector('#btnSeeHistory').addEventListener ('click', function (){
+	document.querySelector('#btnSeeHistory').addEventListener ('touchend', function (){
 
 		refreshHistory(function(){
 
@@ -348,7 +400,7 @@ window.onload = function(){
 	});
 
 
-	document.querySelector('#backButtonHistory').addEventListener ('click', function (){
+	document.querySelector('#backButtonHistory').addEventListener ('touchend', function (){
 
 		document.querySelector('#homePage').className = 'current';
 		document.querySelector('#historyPage').className = 'right';
@@ -356,7 +408,7 @@ window.onload = function(){
 	});
 
 
-	document.querySelector('#btnSeeSettings').addEventListener ('click', function (){
+	document.querySelector('#btnSeeSettings').addEventListener ('touchend', function (){
 
 		refreshPreferences();
 
@@ -364,21 +416,21 @@ window.onload = function(){
 		document.querySelector('#homePage').className = 'left';
 	});
 
-	document.querySelector('#backButtonSettings').addEventListener ('click', function (){
+	document.querySelector('#backButtonSettings').addEventListener ('touchend', function (){
 
 		document.querySelector('#homePage').className = 'current';
 		document.querySelector('#settingsPage').className = 'right';
 
 	});
 
-	document.querySelector('#seeSuggestPage').addEventListener ('click', function (){
+	document.querySelector('#seeSuggestPage').addEventListener ('touchend', function (){
 
 		refreshSuggestions();
 		document.querySelector('#suggestPage').className = 'current';
 		document.querySelector('#homePage').className = 'left';
 	});
 
-	document.querySelector('#backButtonSuggest').addEventListener ('click', function (){
+	document.querySelector('#backButtonSuggest').addEventListener ('touchend', function (){
 
 
 		refreshTodaysList(function(){
@@ -392,6 +444,31 @@ window.onload = function(){
 
 	});
 
+
+
+}
+
+window.onload = function(){
+
+
+	calDB.open(function(){
+		refreshTodaysList(function(){
+			countUp("#todayTotalCalCount");
+		}, true);
+	});
+
+
+	queryDom();
+
+
+	if (localStorage.getItem("notForFirstTime") === null){
+
+		document.querySelector('#welcomePage').className = 'current';
+		document.querySelector('#homePage').className = 'left';
+	}
+	
+
+	addNavBtnListeners();
 
 
 	countUp("#todayTotalCalCount");
@@ -417,7 +494,6 @@ window.onload = function(){
 			_slFood.innerHTML = html;
 
 			fireChangeEvent(_slFood);
-			//_slFood.fireEvent("change");
 
 		}
 
@@ -469,7 +545,7 @@ window.onload = function(){
 	});
 
 
-	_btnAddFood.addEventListener('click', function(){
+	_btnAddFood.addEventListener('touchend', function(){
 
 		var amount = parseInt(_slFoodAmount.options[_slFoodAmount.selectedIndex].value);
 		var calPerUnit = parseInt(selectedFood.food_calorie);
@@ -492,7 +568,7 @@ window.onload = function(){
 	});
 
 
-	_prefBtnSave.addEventListener('click', function(){
+	_prefBtnSave.addEventListener('touchend', function(){
 
 		var age, sex, height, weight, activity;
 
@@ -518,7 +594,7 @@ window.onload = function(){
 	});
 
 
-	_btnSaveWelcome.addEventListener('click', function(){
+	_btnSaveWelcome.addEventListener('touchend', function(){
 
 		var age, sex, height, weight, activity;
 
@@ -539,7 +615,9 @@ window.onload = function(){
 
 		var calorieNeed = getDailyCalorieNeed(sex, weight, height, activity, age);
 
-		localStorage.calorieNeed = calorieNeed;
+		localStorage.todaysCalorieNeed = calorieNeed;
+
+		console.log(localStorage.todaysCalorieNeed);
 
 		refreshTodaysList(function(){
 
@@ -554,36 +632,36 @@ window.onload = function(){
 	});
 
 
-	_startswalk.addEventListener('click', function(){
+	_startswalk.addEventListener('touchend', function(){
 		showActivityTimer('s_walk');
 
 	});
-	_startmwalk.addEventListener('click', function(){
+	_startmwalk.addEventListener('touchend', function(){
 		showActivityTimer('m_walk');
 
 	});
-	_startfwalk.addEventListener('click', function(){
+	_startfwalk.addEventListener('touchend', function(){
 		showActivityTimer('f_walk');
 
 	});
-	_startcycle.addEventListener('click', function(){
+	_startcycle.addEventListener('touchend', function(){
 		showActivityTimer('cycle');
 
 	});
-	_startrun.addEventListener('click', function(){
+	_startrun.addEventListener('touchend', function(){
 		showActivityTimer('run');
 
 	});
-	_startjog.addEventListener('click', function(){
+	_startjog.addEventListener('touchend', function(){
 		showActivityTimer('jog');
 
 	});
-	_startswim.addEventListener('click', function(){
+	_startswim.addEventListener('touchend', function(){
 		showActivityTimer('swim');
 
 	});
 
-	_btnActivityFinish.addEventListener('click', function(evt){
+	_btnActivityFinish.addEventListener('touchend', function(evt){
 
 		evt.preventDefault();
 
@@ -596,84 +674,4 @@ window.onload = function(){
 	
 
 }
-
-
-function activityRun(){
-
-	activityRunSecond++;
-
-	if(activityRunSecond == 60){
-		activityRunSecond = 0;
-		activityRunMinute++;
-	}
-
-	if (activityRunSecond<10) secString = "0" + activityRunSecond;
-	else secString = "" + activityRunSecond;
-
-	if (activityRunMinute<10) minString = "0" + activityRunMinute;
-	else minString = "" + activityRunMinute;
-
-
-	_runningTimer.innerHTML = minString + ":" + secString;
-
-	if(activityRunning){
-		setTimeout(activityRun, 1000);
-	}
-
-}
-
-
-function prepareTimer(activity){
-
-	if(activity === 's_walk') document.querySelector('#runningActivityName').innerHTML = 'slow walking';
-	if(activity === 'm_walk') document.querySelector('#runningActivityName').innerHTML = 'walking';
-	if(activity === 'f_walk') document.querySelector('#runningActivityName').innerHTML = 'fast walking';
-	if(activity === 'jog') document.querySelector('#runningActivityName').innerHTML = 'jogging';
-	if(activity === 'swim') document.querySelector('#runningActivityName').innerHTML = 'swimming';
-	if(activity === 'run') document.querySelector('#runningActivityName').innerHTML = 'running';
-	if(activity === 'cycle') document.querySelector('#runningActivityName').innerHTML = 'cycling';
-
-	activityRunSecond = 0;
-	activityRunMinute = 0;
-
-	activityRunning = true;
-	runningAvtivityType = activity;
-
-	_runningTimer.innerHTML = '00:00';
-
-	setTimeout(activityRun, 1000);
-}
-
-
-function finishCurrentActivity(){
-
-	activityRunning = false;
-
-	var burntPerMinute = calCosts[runningAvtivityType];
-
-	var totalBurnt = burntPerMinute * activityRunMinute + burntPerMinute/60.0*activityRunSecond;
-
-	console.log("before: " + localStorage.calorieNeed);
-
-	localStorage.calorieNeed = 	parseInt(localStorage.calorieNeed) + parseInt(totalBurnt);
-
-	console.log("after: " + localStorage.calorieNeed);
-
-	console.log('totalBurnt :' + totalBurnt );
-
-
-
-}
-
-function showActivityTimer(activity){
-
-	prepareTimer(activity);
-
-	document.querySelector('#confirm').className = 'fade-in';
-	
-	// document.querySelector('#confirm').addEventListener ('click', function () {
-	// 	this.className = 'fade-out';
-	// });
-}
-
 
