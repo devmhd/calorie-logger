@@ -81,7 +81,9 @@ section[role="region"] > header:first-child a, section[role="region"] > header:f
 	margin-bottom: 0;
 }
 
-.bigCalCount span#todayTotalCalCount{
+.bigCalCount span#todayTotalCalCount,
+.bigCalCount span#todayTotalActivityCount
+{
 	font-size: 2em;
 	color: #008EAB;
 	text-align: center;

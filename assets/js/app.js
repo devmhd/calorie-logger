@@ -1,5 +1,5 @@
 
-function getDailyCalorieNeed(sex, weight, height, activity, age){
+function getDailyCalorieNeed(sex, weight, height, activityLevel, age){
 
 	var BMR;
 
@@ -9,7 +9,7 @@ function getDailyCalorieNeed(sex, weight, height, activity, age){
 		BMR = 655 + 9.6 * weight + 1.8 * height - 4.7 * age;
 	}
 
-	return parseInt(BMR * activity);
+	return parseInt(BMR * activityLevel);
 }
 
 
@@ -88,27 +88,25 @@ function activityRun(){
 }
 
 
-function prepareTimer(activity){
+function prepareTimer(activityId){
 
-	if(activity === 's_walk') document.querySelector('#runningActivityName').innerHTML = 'slow walking';
-	if(activity === 'm_walk') document.querySelector('#runningActivityName').innerHTML = 'walking';
-	if(activity === 'f_walk') document.querySelector('#runningActivityName').innerHTML = 'fast walking';
-	if(activity === 'jog') document.querySelector('#runningActivityName').innerHTML = 'jogging';
-	if(activity === 'swim') document.querySelector('#runningActivityName').innerHTML = 'swimming';
-	if(activity === 'run') document.querySelector('#runningActivityName').innerHTML = 'running';
-	if(activity === 'cycle') document.querySelector('#runningActivityName').innerHTML = 'cycling';
+
+	document.querySelector('#runningActivityName').innerHTML = allActivities[activityId].name_ing;
+
 
 	activityRunSecond = 0;
 	activityRunMinute = 0;
 
 	activityRunning = true;
-	runningAvtivityType = activity;
+
+	runningAvtivityType = activityId;
 
 	_runningTimer.innerHTML = '00:00';
 
 	cpuLock = navigator.requestWakeLock('cpu');
 
 	setTimeout(activityRun, 1000);
+
 }
 
 
@@ -116,21 +114,17 @@ function finishCurrentActivity(){
 
 	activityRunning = false;
 
-	var burntPerMinute = calCosts[runningAvtivityType];
+	var burntPerMinutePerkg = allActivities[runningAvtivityType].calorie;
 
-	var totalBurnt = burntPerMinute * activityRunMinute + burntPerMinute/60.0*activityRunSecond;
+	var minute = activityRunMinute + activityRunSecond/60.0;
+
+	var totalBurnt = burntPerMinutePerkg * minute + parseFloat(localStorage.weight);
 
 	console.log("before: " + localStorage.todaysCalorieNeed);
 
-	console.log(localStorage.todaysCalorieNeed);
-
-	localStorage.todaysCalorieNeed = 	parseInt(localStorage.todaysCalorieNeed) + parseInt(totalBurnt);
-
-	console.log(localStorage.todaysCalorieNeed);
+	localStorage.todaysCalorieNeed = parseInt(localStorage.todaysCalorieNeed) + parseInt(totalBurnt);
 
 	console.log("after: " + localStorage.todaysCalorieNeed);
-
-	console.log(localStorage.todaysCalorieNeed);
 
 	console.log('totalBurnt :' + totalBurnt );
 
@@ -197,13 +191,11 @@ function populateTodayList(foods, first){
 
 	var html = "";
 
-	console.log(foods.length);
 
 	todaysTotal = 0;
 
 	for(var i = foods.length-1; i>=0; --i){
 
-		console.log(i + " " + foods[i]);
 
 		food = foods[i];
 
@@ -223,10 +215,10 @@ function populateTodayList(foods, first){
 		html += '</a>';
 		html += '</li>';
 
-
 		todaysTotal += parseInt(food.calorie);
-
 	}
+
+
 
 	_todayTotalCalCount.innerHTML = todaysTotal;
 
@@ -370,25 +362,30 @@ function queryDom(){
 	_runningTimer = document.querySelector('#runningTimer');
 	_btnActivityFinish = document.querySelector('#btnActivityFinish');
 
+	_activityStartButtons = document.querySelector('#activityStartButtons');
+
+
+	tickSound = document.querySelector('#tickSound');
+
 }
 
 
 function addNavBtnListeners(){
 
-	document.querySelector('#addButtonHome').addEventListener ('touchend', function (){
+	document.querySelector('#addButtonHome').addEventListener ('click', function (){
 
 		document.querySelector('#addPage').className = 'current';
 		document.querySelector('#homePage').className = 'left';
 	});
 
-	document.querySelector('#backButtonAdd').addEventListener ('touchend', function (){
+	document.querySelector('#backButtonAdd').addEventListener ('click', function (){
 
 		document.querySelector('#homePage').className = 'current';
 		document.querySelector('#addPage').className = 'right';
 
 	});
 
-	document.querySelector('#btnSeeHistory').addEventListener ('touchend', function (){
+	document.querySelector('#btnSeeHistory').addEventListener ('click', function (){
 
 		refreshHistory(function(){
 
@@ -400,7 +397,7 @@ function addNavBtnListeners(){
 	});
 
 
-	document.querySelector('#backButtonHistory').addEventListener ('touchend', function (){
+	document.querySelector('#backButtonHistory').addEventListener ('click', function (){
 
 		document.querySelector('#homePage').className = 'current';
 		document.querySelector('#historyPage').className = 'right';
@@ -408,7 +405,10 @@ function addNavBtnListeners(){
 	});
 
 
-	document.querySelector('#btnSeeSettings').addEventListener ('touchend', function (){
+	document.querySelector('#btnSeeSettings').addEventListener ('click', function (){
+
+
+//		tickSound.play();
 
 		refreshPreferences();
 
@@ -416,21 +416,21 @@ function addNavBtnListeners(){
 		document.querySelector('#homePage').className = 'left';
 	});
 
-	document.querySelector('#backButtonSettings').addEventListener ('touchend', function (){
+	document.querySelector('#backButtonSettings').addEventListener ('click', function (){
 
 		document.querySelector('#homePage').className = 'current';
 		document.querySelector('#settingsPage').className = 'right';
 
 	});
 
-	document.querySelector('#seeSuggestPage').addEventListener ('touchend', function (){
+	document.querySelector('#seeSuggestPage').addEventListener ('click', function (){
 
 		refreshSuggestions();
 		document.querySelector('#suggestPage').className = 'current';
 		document.querySelector('#homePage').className = 'left';
 	});
 
-	document.querySelector('#backButtonSuggest').addEventListener ('touchend', function (){
+	document.querySelector('#backButtonSuggest').addEventListener ('click', function (){
 
 
 		refreshTodaysList(function(){
@@ -445,11 +445,73 @@ function addNavBtnListeners(){
 	});
 
 
+	document.querySelector('#btnSeeActivities').addEventListener ('click', function (){
+
+		document.querySelector('#activityPage').className = 'current';
+		document.querySelector('#homePage').className = 'left';
+	});
+
+	document.querySelector('#backButtonActivity').addEventListener ('click', function (){
+
+
+			document.querySelector('#homePage').className = 'current';
+			document.querySelector('#activityPage').className = 'right';
+
+		
+
+	});
+
+
+	document.querySelector('#addButtonActivity').addEventListener ('click', function (){
+
+		document.querySelector('#action-select-activity').className = 'fade-in';
+	});
+
+	document.querySelector('#cancel-action-select-activity').addEventListener ('click', function (){
+
+		document.querySelector('#action-select-activity').className = 'fade-out';
+	});
+
+
+
+}
+
+
+function prepareActivityStartButtons(){
+
+	var html = "";
+
+	for(var activityId in allActivities){
+		html += '<button id="btnStartActivity_' + activityId + '" ">' + allActivities[activityId].main_name + ' start </button>';
+
+
+	}
+
+	_activityStartButtons.innerHTML = html + _activityStartButtons.innerHTML;
+
+	for(var activityId in allActivities){
+
+		document.querySelector('#btnStartActivity_' + activityId).addEventListener('click', function(){
+
+			var ac_id = this.id.replace("btnStartActivity_","");
+
+			document.querySelector('#action-select-activity').className = 'fade-out';
+
+			showActivityTimer(ac_id);
+			console.log(ac_id + ' started');
+		});
+	}
+
+	console.log('whoosh');
+
 
 }
 
 window.onload = function(){
 
+
+
+	queryDom();
 
 	calDB.open(function(){
 		refreshTodaysList(function(){
@@ -458,10 +520,11 @@ window.onload = function(){
 	});
 
 
-	queryDom();
+	prepareActivityStartButtons();
 
 
 	if (localStorage.getItem("notForFirstTime") === null){
+
 
 		document.querySelector('#welcomePage').className = 'current';
 		document.querySelector('#homePage').className = 'left';
@@ -545,7 +608,7 @@ window.onload = function(){
 	});
 
 
-	_btnAddFood.addEventListener('touchend', function(){
+	_btnAddFood.addEventListener('click', function(){
 
 		var amount = parseInt(_slFoodAmount.options[_slFoodAmount.selectedIndex].value);
 		var calPerUnit = parseInt(selectedFood.food_calorie);
@@ -561,6 +624,9 @@ window.onload = function(){
 			refreshTodaysList(function(){
 				document.querySelector('#homePage').className = 'current';
 				document.querySelector('#addPage').className = 'right';
+
+				navigator.vibrate(50);
+
 			}, false);
 		});
 
@@ -568,7 +634,7 @@ window.onload = function(){
 	});
 
 
-	_prefBtnSave.addEventListener('touchend', function(){
+	_prefBtnSave.addEventListener('click', function(){
 
 		var age, sex, height, weight, activity;
 
@@ -594,7 +660,7 @@ window.onload = function(){
 	});
 
 
-	_btnSaveWelcome.addEventListener('touchend', function(){
+	_btnSaveWelcome.addEventListener('click', function(){
 
 		var age, sex, height, weight, activity;
 
@@ -604,7 +670,12 @@ window.onload = function(){
 		weight = parseInt(_welWeight.value);
 		activity = parseFloat(_welActivity.options[_welActivity.selectedIndex].value);
 
-		console.log(age + " " + sex + " " + height + " " + weight + " " + activity);
+		if(isNaN(age) || isNaN(height) || isNaN(weight)){
+			utils.status.show('Please input correct values');
+			return;
+		}
+
+
 
 		localStorage['age'] = age;
 		localStorage['sex'] = sex;
@@ -615,9 +686,8 @@ window.onload = function(){
 
 		var calorieNeed = getDailyCalorieNeed(sex, weight, height, activity, age);
 
-		localStorage.todaysCalorieNeed = calorieNeed;
+		localStorage.setItem('dailyCalorieNeed') = calorieNeed;
 
-		console.log(localStorage.todaysCalorieNeed);
 
 		refreshTodaysList(function(){
 
@@ -625,6 +695,8 @@ window.onload = function(){
 			document.querySelector('#welcomePage').className = 'right';
 
 			localStorage['notForFirstTime'] = 1;
+			localStorage['installDate'] = (new Date()).getTime();
+
 
 		}, true);
 
@@ -632,36 +704,36 @@ window.onload = function(){
 	});
 
 
-	_startswalk.addEventListener('touchend', function(){
+	_startswalk.addEventListener('click', function(){
 		showActivityTimer('s_walk');
 
 	});
-	_startmwalk.addEventListener('touchend', function(){
+	_startmwalk.addEventListener('click', function(){
 		showActivityTimer('m_walk');
 
 	});
-	_startfwalk.addEventListener('touchend', function(){
+	_startfwalk.addEventListener('click', function(){
 		showActivityTimer('f_walk');
 
 	});
-	_startcycle.addEventListener('touchend', function(){
+	_startcycle.addEventListener('click', function(){
 		showActivityTimer('cycle');
 
 	});
-	_startrun.addEventListener('touchend', function(){
+	_startrun.addEventListener('click', function(){
 		showActivityTimer('run');
 
 	});
-	_startjog.addEventListener('touchend', function(){
+	_startjog.addEventListener('click', function(){
 		showActivityTimer('jog');
 
 	});
-	_startswim.addEventListener('touchend', function(){
+	_startswim.addEventListener('click', function(){
 		showActivityTimer('swim');
 
 	});
 
-	_btnActivityFinish.addEventListener('touchend', function(evt){
+	_btnActivityFinish.addEventListener('click', function(evt){
 
 		evt.preventDefault();
 

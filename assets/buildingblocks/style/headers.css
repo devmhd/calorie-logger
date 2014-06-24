@@ -52,7 +52,6 @@ section[role="region"] > header:first-child button {
   display: block;
   overflow: hidden;
   float: left;
-  min-width: 5rem;
   width: auto;
   height: 5rem;
   border: none;
@@ -169,6 +168,24 @@ section[role="region"] > header:first-child button:focus {
 /* ----------------------------------
   Icons
 ---------------------------------- */
+
+
+section[role="region"] > header:first-child .icon-runningadd {
+  background-image: url(headers/images/icons/runningadd.png);
+}
+
+section[role="region"] > header:first-child .icon-appleadd {
+  background-image: url(headers/images/icons/appleadd.png);
+}
+
+
+section[role="region"] > header:first-child .icon-running {
+  background-image: url(headers/images/icons/running.png);
+}
+
+section[role="region"] > header:first-child .icon-check {
+  background-image: url(headers/images/icons/check.png);
+}
 
 section[role="region"] > header:first-child .icon-settings {
   background-image: url(headers/images/icons/settings.png);

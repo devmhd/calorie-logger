@@ -1,12 +1,59 @@
-var calCosts = {
+var allActivities = {
+   's_walk' : {
 
-   's_walk' : 3.4,
-   'm_walk' : 4.533,
-   'f_walk' : 5.667,
-   'jog'    : 10.5,
-   'swim'   : 6.8,
-   'run'    : 18.7,
-   'cycle'  : 7.1
+      main_name: "slow walk",
+      name_ing: "walking slowly",
+      calorie: 0.06
+
+   },
+
+   'm_walk' : {
+
+      main_name: "walk",
+      name_ing: "walking",
+      calorie: 0.07
+
+   },
+
+   'f_walk' : {
+      
+      main_name: "fast walk",
+      name_ing: "walking fast",
+      calorie: 0.08
+
+   },
+
+   'jog' : {
+      
+      main_name: "jog",
+      name_ing: "jogging",
+      calorie: 0.15
+
+   },
+
+   'swim' : {
+      
+      main_name: "swim",
+      name_ing: "swimming",
+      calorie: 0.12
+
+   },
+
+   'run' : {
+      
+      main_name: "run",
+      name_ing: "running",
+      calorie: 0.22
+
+   },
+
+   'cycle' : {
+      
+      main_name: "cycle",
+      name_ing: "cycling",
+      calorie: 0.14
+
+   }
 
 };
 

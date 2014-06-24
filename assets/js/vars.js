@@ -1,6 +1,8 @@
 
 var cpuLock;
 
+var tickSound;
+
 var activityRunMinute, activityRunSecond, activityRunning, runningAvtivityType, minString, secString;
 var _runningTimer;
 var _btnActivityFinish;
@@ -15,6 +17,7 @@ var _welWeight, _welHeight, _welSex, _welAge, _welBtnSave, _welActivity;
 var _extraCal, _swalktime, _mwalktime, _fwalktime, _cycletime, _runtime, _jogtime, _swimtime;
 var _startswalk, _startmwalk, _startfwalk, _startcycle, _startrun, _startjog, _startswim;
 
+var _activityStartButtons;
 
 var currentFoods, selectedFood;
 
