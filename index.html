@@ -184,11 +184,37 @@
 
 
 
+<section role="region" id="activityhistoryPage" data-position="right">
+
+  <header class="fixed">
+    <button id='backButtonActivityHistory'><span class="icon icon-back">close</span></button>
+     <menu type="toolbar">
+       <a id='addButtonHome' href="#"><span class="icon icon-chart">See Chart</span></a>
+     </menu>
+    <h1>সব activity</h1>
+  </header>
+
+  <article class="content scrollable header">
+    <section role="region">
+
+      <section data-type="list">
+        <ul id='activityHistory'>
+        </ul>
+
+      </section>
+    </section>
+  </article>
+</section>
+
+
 
 
 <section role="region" id="settingsPage" data-position="right">
 
   <header class="fixed">
+   <menu type="toolbar">
+       <a id='prefBtnSave' href="#"><span class="icon icon-check">Done</span></a>
+    </menu>
     <button id='backButtonSettings'><span class="icon icon-back">close</span></button>
 
     <h1>আমার তথ্য</h1>
@@ -236,8 +262,6 @@
             <option value='1.9'>অত্যধিক পরিশ্রম (অত্যধিক ব্যায়াম/পেশাদার খেলোয়াড়/কায়িক পরিশ্রম)</option>
           </select>
         </p>
-
-        <button id='prefBtnSave'>সংরক্ষণ</button>
       </form>
 
 
@@ -317,7 +341,7 @@
   <article class="content scrollable header">
     <section role="region" class="suggestRegion">
     <h1 class='suggestHeader'>অতিরিক্ত <span id="extraCal">1000</span> KCal প্রশমিত করতে আপনি নিচের যেকোন একটি কাজ করতে পারেন । </h1>
-    <ul>
+  <!--   <ul>
       <li>1. <span id="swalktime">12</span> মিনিট ধীরে হাটা । <button id="startswalk">Start</button></li>
       <li>2. <span id="mwalktime">12</span> মিনিট মধ্যম গতিতে হাটা । <button id="startmwalk">Start</button></li>
       <li>3. <span id="fwalktime">12</span> মিনিট দ্রুত হাটা । <button id="startfwalk">Start</button></li>
@@ -325,7 +349,47 @@
       <li>5. <span id="runtime">12</span> মিনিট দৌড়ান । <button id="startrun">Start</button></li>
       <li>6. <span id="jogtime">12</span> মিনিট জগিং । <button id="startjog">Start</button></li>
       <li>7. <span id="swimtime">12</span> মিনিট সাতার। <button id="startswim">Start</button></li>
-    </ul>
+    </ul> -->
+
+    <table cellpadding="0" cellspacing="0">
+      <tr>
+        <td><span id="swalktime">12</span> মিনিট ধীরে হাটা ।</td>
+        <td><button id="startswalk">Start</button></td>
+      </tr>
+
+        <tr>
+        <td><span id="mwalktime">12</span> মিনিট মধ্যম গতিতে হাটা । </td>
+        <td><button id="startmwalk">Start</button></td>
+      </tr>
+
+        <tr>
+        <td><span id="fwalktime">12</span> মিনিট দ্রুত হাটা । </td>
+        <td><button id="startfwalk">Start</button></td>
+      </tr>
+
+        <tr>
+        <td><span id="cycletime">12</span> মিনিট সাইকেল চালানো । </td>
+        <td><button id="startcycle">Start</button></td>
+      </tr>
+
+        <tr>
+        <td><span id="runtime">12</span> মিনিট দৌড়ান । </td>
+        <td><button id="startrun">Start</button></td>
+      </tr>
+
+       <tr>
+        <td><span id="jogtime">12</span> মিনিট জগিং । </td>
+        <td><button id="startjog">Start</button></td>
+      </tr>
+
+       <tr>
+        <td><span id="swimtime">12</span> মিনিট সাতার। </td>
+        <td><button id="startswim">Start</button></td>
+      </tr>
+
+
+    </table>
+
     </section>
   </article>
 </section>
@@ -362,9 +426,41 @@
     </form>
   </section>
 
+
+ <section id="diag-delete-food" data-position="back" class="fullscreen">
+    <form role="dialog" data-type="confirm">
+      <section>
+        <h1>Confirmation</h1>
+        <p id="deletingFoodLabel"></p>
+      </section>
+      <menu>
+        <button id='btn-delete-food-cancel' >Cancel</button>
+        <button id='btn-delete-food-confirm' class="danger">Delete</button>
+      </menu>
+    </form>
+  </section>
+
+
+   <section id="diag-delete-activity" data-position="back" class="fullscreen">
+    <form role="dialog" data-type="confirm">
+      <section>
+        <h1>Confirmation</h1>
+        <p id="deletingActivityLabel"></p>
+      </section>
+      <menu>
+        <button id='btn-delete-activity-cancel' >Cancel</button>
+        <button id='btn-delete-activity-confirm' class="danger">Delete</button>
+      </menu>
+    </form>
+  </section>
+
+
+
+
 <audio id='tickSound' src="assets/audio/tick.ogg">
 </audio>
 
+<script type="text/javascript" src="assets/js/quo.js"></script>
 <script type="text/javascript" src="assets/js/moment.js"></script>
 
 <script type="text/javascript" src="assets/buildingblocks/js/status.js"></script>

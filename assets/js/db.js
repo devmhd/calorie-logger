@@ -43,7 +43,7 @@ var calDB = (function() {
 		var transaction = db.transaction(['foods'], 'readwrite');
 		var objStore = transaction.objectStore('foods');
 		var todayZeroHour = (new Date()).setHours(0,0,0,0);
-		console.log(todayZeroHour);
+	
 
 		var keyRange = IDBKeyRange.lowerBound(todayZeroHour);
 		var cursorRequest = objStore.openCursor(keyRange);
@@ -157,7 +157,8 @@ var calDB = (function() {
 
 
 
-var actDB = (function() {
+var activityDB = (function() {
+
 	var tDB = {};
 	var database = null;
 
@@ -202,7 +203,7 @@ var actDB = (function() {
 		var transaction = db.transaction(['activities'], 'readwrite');
 		var objStore = transaction.objectStore('activities');
 		var todayZeroHour = (new Date()).setHours(0,0,0,0);
-		console.log(todayZeroHour);
+		
 
 		var keyRange = IDBKeyRange.lowerBound(todayZeroHour);
 		var cursorRequest = objStore.openCursor(keyRange);
@@ -229,6 +230,52 @@ var actDB = (function() {
 		cursorRequest.onerror = tDB.onerror;
 
 	};
+
+
+	tDB.getTodaysActivitiesCalCount = function(callback){
+		var db = database;
+		var transaction = db.transaction(['activities'], 'readwrite');
+		var objStore = transaction.objectStore('activities');
+		var todayZeroHour = (new Date()).setHours(0,0,0,0);
+		
+
+		var keyRange = IDBKeyRange.lowerBound(todayZeroHour);
+		var cursorRequest = objStore.openCursor(keyRange);
+
+		var activities = [];
+
+		transaction.oncomplete = function(e) {
+
+			
+			var sum = 0;
+
+			for(var i=0; i<activities.length; ++i){
+
+				sum += activities[i].calorie;
+			}
+
+			
+
+			callback(sum);
+		};
+
+		cursorRequest.onsuccess = function(e) {
+			var result = e.target.result;
+
+			if (!!result == false) {
+				return;
+			}
+
+			activities.push(result.value);
+
+			result.continue();
+		};
+
+		cursorRequest.onerror = tDB.onerror;
+
+	};
+
+
 
 	tDB.fetchActivities = function(callback) {
 		var db = database;
@@ -260,7 +307,7 @@ var actDB = (function() {
 		cursorRequest.onerror = tDB.onerror;
 	};
 
-	tDB.addActivityEntry = function(activityDesc, calorie, callback) {
+	tDB.addActivityEntry = function(activityName, duration, calorie, callback) {
 		
 		var db = database;
 
@@ -275,8 +322,9 @@ var actDB = (function() {
 
 
 		var activityEntry = {
-			'activityDesc': activityDesc,
+			'activityName': activityName,
 			'calorie': calorie,
+			'duration' : duration,
 			'timestamp': timestamp
 		};
 

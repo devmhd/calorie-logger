@@ -22,24 +22,25 @@ function fireChangeEvent(element){
 
 function runUp () {
 
-	num += 17;
-	if (num < maxnum) {
-		_bigCalCountH.innerHTML = num;
+	anim_currentCount += anim_countStep;
+	if (anim_currentCount < anim_countMax) {
+		anim_domContainer.innerHTML = anim_currentCount;
 
-		if(num > todayCalorieNeed){
-			todayTotalCalCount.style.color = "red";
-			
-			crossedCalLimit = true;
+		if(anim_currentCount > anim_threshold){
+
+			anim_domContainer.style.color = "red";
+			anim_crossedThreshold = true;
+
 		}
 
 		setTimeout(runUp, 10);
 
 
 	} else {
-		_bigCalCountH.innerHTML = maxnum;
+		anim_domContainer.innerHTML = anim_countMax;
 
 		var btn = document.querySelector('#seeSuggestPage');
-		if(crossedCalLimit){
+		if(anim_crossedThreshold){
 			btn.style.display = 'block';
 			btn.className = "animated fadeInDown";	
 		}
@@ -50,14 +51,14 @@ function runUp () {
 
 function countUp(selector) {
 
-	crossedCalLimit = false;
-	_bigCalCountH = document.querySelector(selector);
-	maxnum = parseInt(_bigCalCountH.innerHTML);
-	_bigCalCountH.innerHTML = "0";
-	num = 0;
-	todayCalorieNeed = localStorage.todaysCalorieNeed;
+	anim_crossedThreshold = false;
+	anim_domContainer = document.querySelector(selector);
+	anim_countMax = parseInt(anim_domContainer.innerHTML);
+	anim_domContainer.innerHTML = "0";
+	anim_currentCount = 0;
+	anim_threshold = g_dailyCalorieNeed + g_todaysSpentCalorie;
+	anim_countStep = parseInt(anim_countMax/150);
 
-	console.log(localStorage.todaysCalorieNeed);
 	runUp();
 }
 
@@ -82,7 +83,7 @@ function activityRun(){
 	_runningTimer.innerHTML = minString + ":" + secString;
 
 	if(activityRunning){
-		setTimeout(activityRun, 1000);
+		setTimeout(activityRun, 10);
 	}
 
 }
@@ -103,14 +104,15 @@ function prepareTimer(activityId){
 
 	_runningTimer.innerHTML = '00:00';
 
-	cpuLock = navigator.requestWakeLock('cpu');
+	if(navigator.mozApps)
+		cpuLock = navigator.requestWakeLock('cpu');
 
-	setTimeout(activityRun, 1000);
+	setTimeout(activityRun, 10);
 
 }
 
 
-function finishCurrentActivity(){
+function finishCurrentActivity(callback){
 
 	activityRunning = false;
 
@@ -118,17 +120,22 @@ function finishCurrentActivity(){
 
 	var minute = activityRunMinute + activityRunSecond/60.0;
 
-	var totalBurnt = burntPerMinutePerkg * minute + parseFloat(localStorage.weight);
+	var totalBurnt = burntPerMinutePerkg * minute * parseFloat(localStorage['weight']);
 
-	console.log("before: " + localStorage.todaysCalorieNeed);
+
 
 	localStorage.todaysCalorieNeed = parseInt(localStorage.todaysCalorieNeed) + parseInt(totalBurnt);
 
-	console.log("after: " + localStorage.todaysCalorieNeed);
+	g_todaysSpentCalorie += totalBurnt;
 
-	console.log('totalBurnt :' + totalBurnt );
 
-	cpuLock.unlock();
+	if(navigator.mozApps)
+		cpuLock.unlock();
+
+	activityDB.addActivityEntry(allActivities[runningAvtivityType].main_name, 
+		minString + ":" + secString, 
+		totalBurnt, 
+		callback );
 
 
 
@@ -143,6 +150,64 @@ function showActivityTimer(activity){
 }
 
 
+function refreshActivitiesList(){
+
+	activityDB.fetchTodaysActivities(function (fetchedActivities){
+		populateActivityList(fetchedActivities);
+	});
+
+
+}
+
+
+
+function populateActivityList(activities){
+
+	var html = "";
+
+
+	g_todaysSpentCalorie = 0;
+
+	var activity;
+
+	for(var i = activities.length-1; i>=0; --i){
+
+
+		activity = activities[i];
+
+		html += '<li data-timestamp=' + activity.timestamp + ' data-activitydesc="' + activity.activityName + ' (' + activity.duration + ')" >';
+		html += '<aside class="pack-end">';
+		html += '<div class="liCalCount">';
+		html += activity.calorie.toFixed(1) + '<span>KCal</span>';
+		html += '</div>';
+		html += '</aside>';
+		html += '<a href="#">';
+		html += '<p>' + activity.activityName + ' (' + activity.duration + ')' + '</p>';
+
+		timeStr = moment(parseInt(activity.timestamp)).startOf('second').fromNow();
+
+
+		html += '<p>' + timeStr + '</p>';
+		html += '</a>';
+		html += '</li>';
+
+		g_todaysSpentCalorie += parseInt(activity.calorie);
+	}
+
+
+
+	_todayTotalActivityCount.innerHTML = g_todaysSpentCalorie;
+
+
+	_todayActivityList.innerHTML = html;
+
+	$$('#todayActivityList li').hold(function(){
+
+		showActivityDeleteDiag(this.dataset.activitydesc, this.dataset.timestamp);
+
+	});
+
+}
 
 
 
@@ -160,6 +225,15 @@ function refreshHistory(callback){
 
 	calDB.fetchFoods(function (fetchedFoods){
 		populateHistory(fetchedFoods);
+		callback();
+	});
+}
+
+
+function refreshActivityHistory(callback){
+
+	activityDB.fetchActivities(function (fetchedactivities){
+		populateActivityHistory(fetchedactivities);
 		callback();
 	});
 }
@@ -192,14 +266,20 @@ function populateTodayList(foods, first){
 	var html = "";
 
 
-	todaysTotal = 0;
+	_todayTotalCalCount.style.color = "#0AC";
+	var btn = document.querySelector('#seeSuggestPage');
+	btn.style.display = 'none';
+	btn.className = "";	
+
+
+	g_todaysTakenCalorie = 0;
 
 	for(var i = foods.length-1; i>=0; --i){
 
 
 		food = foods[i];
 
-		html += '<li>';
+		html += '<li data-timestamp=' + food.timestamp + ' data-fooddesc="' + food.foodDesc + '" >';
 		html += '<aside class="pack-end">';
 		html += '<div class="liCalCount">';
 		html += food.calorie + '<span>KCal</span>';
@@ -211,43 +291,102 @@ function populateTodayList(foods, first){
 		timeStr = moment(parseInt(food.timestamp)).startOf('second').fromNow();
 
 
-		html += '<p>' + timeStr + '</p>';
+		html += '<p>' + food.timestamp + '</p>';
 		html += '</a>';
 		html += '</li>';
 
-		todaysTotal += parseInt(food.calorie);
+		g_todaysTakenCalorie += parseInt(food.calorie);
 	}
 
 
 
-	_todayTotalCalCount.innerHTML = todaysTotal;
+	_todayTotalCalCount.innerHTML = g_todaysTakenCalorie;
 
-	if(todaysTotal > parseInt(localStorage.todaysCalorieNeed) && !first){
 
-		console.log(localStorage.todaysCalorieNeed);
+	if((g_todaysTakenCalorie > (g_dailyCalorieNeed + g_todaysSpentCalorie)) && !first){
+
 
 
 		_todayTotalCalCount.style.color = "red";
 		var btn = document.querySelector('#seeSuggestPage');
 		btn.style.display = 'block';
-		btn.className = "animated fadeInDown";	
+		
 		
 
 	}
 
-	_calorieNeedToday.innerHTML = localStorage.todaysCalorieNeed;
-
-	console.log(localStorage.todaysCalorieNeed);
-	localStorage['tadaysCalorie'] = todaysTotal;
-
-
+	_calorieNeedToday.innerHTML = parseInt(g_dailyCalorieNeed + g_todaysSpentCalorie).toFixed(0);
 
 
 	_todayFoodList.innerHTML = html;
 
+
+
+
+	$$('#todayFoodList li').hold(function(){
+
+
+		showFoodDeleteDiag(this.dataset.fooddesc, this.dataset.timestamp);
+
+
+	});
+	
+
+}
+
+function showFoodDeleteDiag(foodDesc, timestamp){
+
+	deleteFoodCandidate = parseInt(timestamp);
+
+	document.querySelector('#deletingFoodLabel').innerHTML = foodDesc;
+	document.querySelector('#diag-delete-food').className = 'fade-in';
+}
+
+function showActivityDeleteDiag(activityDesc, timestamp){
+
+	deleteActivityCandidate = parseInt(timestamp);
+
+	document.querySelector('#deletingActivityLabel').innerHTML = activityDesc;
+	document.querySelector('#diag-delete-activity').className = 'fade-in';
 }
 
 
+function populateActivityHistory(activities){
+
+	var html = "";
+
+	var activity;
+
+	for(var i = activities.length-1; i>=0; --i){
+
+		
+
+		activity = activities[i];
+
+		html += '<li data-timestamp=' + activity.timestamp + ' data-activitydesc="' + activity.activityName + ' (' + activity.duration + ')" >';
+		html += '<aside class="pack-end">';
+		html += '<div class="liCalCount">';
+		html += activity.calorie.toFixed(2) + '<span>KCal</span>';
+		html += '</div>';
+		html += '</aside>';
+		html += '<a href="#">';
+		html += '<p>' + activity.activityName + '</p>';
+
+		timeStr = moment(parseInt(activity.timestamp)).startOf('second').fromNow();
+
+
+		html += '<p>' + timeStr + '</p>';
+		html += '</a>';
+		html += '</li>';
+
+
+	}
+
+	_activityHistory.innerHTML = html;
+
+	
+
+}
 
 
 function populateHistory(foods){
@@ -257,7 +396,7 @@ function populateHistory(foods){
 
 	for(var i = foods.length-1; i>=0; --i){
 
-		console.log(i + " " + foods[i]);
+		
 
 		food = foods[i];
 
@@ -288,22 +427,21 @@ function populateHistory(foods){
 
 function refreshSuggestions(){
 
-	var today = parseInt(localStorage.tadaysCalorie);
-	var max = parseInt(localStorage.todaysCalorieNeed);
+	
 
-	console.log(localStorage.todaysCalorieNeed);
+	var diff = g_todaysTakenCalorie - (g_dailyCalorieNeed + g_todaysSpentCalorie);
 
-	var diff = today - max;
+	_extraCal.innerHTML = diff.toFixed(2);
 
-	_extraCal.innerHTML = diff;
+	var weight = parseFloat(localStorage['weight']);
 
-	_swalktime.innerHTML = parseInt((diff / calCosts.s_walk));
-	_mwalktime.innerHTML = parseInt((diff / calCosts.m_walk));
-	_fwalktime.innerHTML = parseInt((diff / calCosts.f_walk));
-	_jogtime.innerHTML = parseInt((diff / calCosts.jog));
-	_swimtime.innerHTML = parseInt((diff / calCosts.swim));
-	_runtime.innerHTML = parseInt((diff / calCosts.run));
-	_cycletime.innerHTML = parseInt((diff / calCosts.cycle));
+	_swalktime.innerHTML = parseInt(diff / (allActivities.s_walk.calorie * weight));
+	_mwalktime.innerHTML = parseInt(diff / (allActivities.m_walk.calorie * weight));
+	_fwalktime.innerHTML = parseInt(diff / (allActivities.f_walk.calorie * weight));
+	_jogtime.innerHTML = parseInt(diff / (allActivities.jog.calorie * weight));
+	_swimtime.innerHTML = parseInt(diff / (allActivities.swim.calorie * weight));
+	_runtime.innerHTML = parseInt(diff / (allActivities.run.calorie * weight));
+	_cycletime.innerHTML = parseInt(diff / (allActivities.cycle.calorie * weight));
 
 
 
@@ -323,6 +461,13 @@ function queryDom(){
 	_todayFoodList = document.querySelector("#todayFoodList");
 	_todayTotalCalCount = document.querySelector("#todayTotalCalCount");
 	_foodHistory = document.querySelector("#foodHistory");
+
+
+	_todayActivityList = document.querySelector('#todayActivityList');
+	_btnSeeActivityHistory = document.querySelector('#btnSeeActivityHistory');
+	_todayTotalActivityCount = document.querySelector('#todayTotalActivityCount');
+
+	_activityHistory = document.querySelector('#activityHistory');
 
 	_prefSex = document.querySelector("#prefSex");
 	_prefAge = document.querySelector("#prefAge");
@@ -410,14 +555,15 @@ function addNavBtnListeners(){
 
 //		tickSound.play();
 
-		refreshPreferences();
+refreshPreferences();
 
-		document.querySelector('#settingsPage').className = 'current';
-		document.querySelector('#homePage').className = 'left';
-	});
+document.querySelector('#settingsPage').className = 'current';
+document.querySelector('#homePage').className = 'left';
+});
 
 	document.querySelector('#backButtonSettings').addEventListener ('click', function (){
 
+		refreshTodaysList();
 		document.querySelector('#homePage').className = 'current';
 		document.querySelector('#settingsPage').className = 'right';
 
@@ -447,6 +593,8 @@ function addNavBtnListeners(){
 
 	document.querySelector('#btnSeeActivities').addEventListener ('click', function (){
 
+
+		refreshActivitiesList();
 		document.querySelector('#activityPage').className = 'current';
 		document.querySelector('#homePage').className = 'left';
 	});
@@ -454,9 +602,12 @@ function addNavBtnListeners(){
 	document.querySelector('#backButtonActivity').addEventListener ('click', function (){
 
 
+		refreshTodaysList(function(){
 			document.querySelector('#homePage').className = 'current';
 			document.querySelector('#activityPage').className = 'right';
 
+		}, false);
+		
 		
 
 	});
@@ -467,9 +618,81 @@ function addNavBtnListeners(){
 		document.querySelector('#action-select-activity').className = 'fade-in';
 	});
 
-	document.querySelector('#cancel-action-select-activity').addEventListener ('click', function (){
+	document.querySelector('#cancel-action-select-activity').addEventListener ('click', function (ev){
 
+		ev.preventDefault();
+		ev.stopPropagation();
 		document.querySelector('#action-select-activity').className = 'fade-out';
+	});
+
+
+	document.querySelector('#btnSeeActivityHistory').addEventListener('click', function(){
+
+		refreshActivityHistory(function(){
+
+			document.querySelector('#activityhistoryPage').className = 'current';
+			document.querySelector('#activityPage').className = 'left';
+
+		});
+
+	});
+
+	document.querySelector('#backButtonActivityHistory').addEventListener('click', function(){
+
+		document.querySelector('#activityPage').className = 'current';
+		document.querySelector('#activityhistoryPage').className = 'right';
+
+	});
+
+
+
+	
+
+
+	document.querySelector('#btn-delete-food-cancel').addEventListener('click', function(){
+
+		document.querySelector('#diag-delete-food').className = 'fade-out';
+	});
+
+	document.querySelector('#btn-delete-activity-cancel').addEventListener('click', function(){
+
+		document.querySelector('#diag-delete-activity').className = 'fade-out';
+	});
+
+
+
+
+	document.querySelector('#btn-delete-food-confirm').addEventListener('click', function(){
+
+
+		console.log(deleteFoodCandidate);
+
+		calDB.deleteFoodEntry(deleteFoodCandidate, function(){
+
+			refreshTodaysList(function(){
+				document.querySelector('#diag-delete-food').className = 'fade-out';
+			}, false);
+
+		});
+
+
+	});
+
+
+	document.querySelector('#btn-delete-activity-confirm').addEventListener('click', function(){
+
+
+		console.log(deleteActivityCandidate);
+
+		activityDB.deleteActivityEntry(deleteActivityCandidate, function(){
+
+			refreshActivitiesList();
+			document.querySelector('#diag-delete-activity').className = 'fade-out';
+		
+
+		});
+
+
 	});
 
 
@@ -498,14 +721,16 @@ function prepareActivityStartButtons(){
 			document.querySelector('#action-select-activity').className = 'fade-out';
 
 			showActivityTimer(ac_id);
-			console.log(ac_id + ' started');
+			
 		});
 	}
 
-	console.log('whoosh');
+	
 
 
 }
+
+
 
 window.onload = function(){
 
@@ -513,11 +738,7 @@ window.onload = function(){
 
 	queryDom();
 
-	calDB.open(function(){
-		refreshTodaysList(function(){
-			countUp("#todayTotalCalCount");
-		}, true);
-	});
+	
 
 
 	prepareActivityStartButtons();
@@ -528,19 +749,42 @@ window.onload = function(){
 
 		document.querySelector('#welcomePage').className = 'current';
 		document.querySelector('#homePage').className = 'left';
+
 	}
+
+	g_dailyCalorieNeed = parseInt(localStorage['dailyCalorieNeed']);
+
+
+	calDB.open(function(){
+
+		activityDB.open(function(){
+
+			activityDB.getTodaysActivitiesCalCount(function(activityCalCount){
+
+				g_todaysSpentCalorie = activityCalCount;
+				
+				refreshTodaysList(function(){
+					countUp("#todayTotalCalCount");
+				}, 	true);
+
+			});
+
+
+		});
+
+	});
+
+
+	
 	
 
 	addNavBtnListeners();
-
-
-	countUp("#todayTotalCalCount");
 
 	_slFoodType.addEventListener('change', function(){
 
 		var index = parseInt(_slFoodType.options[_slFoodType.selectedIndex].value) - 1;
 
-		console.log(index);
+		
 
 		var html = "";
 
@@ -618,7 +862,7 @@ window.onload = function(){
 
 		foodDesc = _slFoodAmount.options[_slFoodAmount.selectedIndex].value + " " + selectedFood.food_unit + " " + selectedFood.food_name;
 
-		console.log(foodDesc);
+
 
 		calDB.addFoodEntry(foodDesc, totalCalorie, function(){
 			refreshTodaysList(function(){
@@ -644,16 +888,20 @@ window.onload = function(){
 		weight = parseInt(_prefWeight.value);
 		activity = parseFloat(_prefActivity.options[_prefActivity.selectedIndex].value);
 
+		if(isNaN(age) || isNaN(height) || isNaN(weight)){
+			utils.status.show('Please input correct values');
+			return;
+		}
+
 		localStorage['age'] = age;
 		localStorage['sex'] = sex;
 		localStorage['height'] = height;
 		localStorage['weight'] = weight;
 		localStorage['activity'] = activity;
 
+		localStorage['dailyCalorieNeed'] = g_dailyCalorieNeed = getDailyCalorieNeed(sex, weight, height, activity, age);
 
-		var calorieNeed = getDailyCalorieNeed(sex, weight, height, activity, age);
-
-		localStorage['calorieNeed'] = calorieNeed;
+		utils.status.show('Settings saved');
 
 
 
@@ -686,8 +934,9 @@ window.onload = function(){
 
 		var calorieNeed = getDailyCalorieNeed(sex, weight, height, activity, age);
 
-		localStorage.setItem('dailyCalorieNeed') = calorieNeed;
+		localStorage['dailyCalorieNeed'] = g_dailyCalorieNeed = calorieNeed;
 
+		g_todaysSpentCalorie = g_todaysTakenCalorie = 0;
 
 		refreshTodaysList(function(){
 
@@ -704,46 +953,29 @@ window.onload = function(){
 	});
 
 
-	_startswalk.addEventListener('click', function(){
-		showActivityTimer('s_walk');
+_btnActivityFinish.addEventListener('click', function(evt){
 
-	});
-	_startmwalk.addEventListener('click', function(){
-		showActivityTimer('m_walk');
+	evt.preventDefault();
 
-	});
-	_startfwalk.addEventListener('click', function(){
-		showActivityTimer('f_walk');
+	finishCurrentActivity(function(){
 
-	});
-	_startcycle.addEventListener('click', function(){
-		showActivityTimer('cycle');
+		if(document.querySelector('#suggestPage').className.search('current') >= 0){
+			refreshSuggestions();
+			console.log('from suggestions');
+			
+		} else {
+			refreshActivitiesList();
+			console.log('from Activities');
+		}
 
-	});
-	_startrun.addEventListener('click', function(){
-		showActivityTimer('run');
-
-	});
-	_startjog.addEventListener('click', function(){
-		showActivityTimer('jog');
-
-	});
-	_startswim.addEventListener('click', function(){
-		showActivityTimer('swim');
-
-	});
-
-	_btnActivityFinish.addEventListener('click', function(evt){
-
-		evt.preventDefault();
-
-		finishCurrentActivity();
-		refreshSuggestions();
 		document.querySelector('#confirm').className = 'fade-out';
 
 	});
 
-	
+
+});
+
+
 
 }
 

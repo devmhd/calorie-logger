@@ -82,7 +82,7 @@ section[role="region"] > header:first-child a, section[role="region"] > header:f
 }
 
 .bigCalCount span#todayTotalCalCount,
-.bigCalCount span#todayTotalActivityCount
+.bigCalCount span#todayTotalActivityCount\
 {
 	font-size: 2em;
 	color: #008EAB;
@@ -207,4 +207,15 @@ form[role="dialog"][data-type="confirm"] > section h1{
 
 form[role="dialog"][data-type="confirm"] > section h1#runningTimer{
 	font-size: 2em;
+}
+
+
+table{
+	font-size: 2em;
+	width: 100%;
+}
+
+td{
+	border-bottom: 2px solid rgba(236, 236, 236, 1);
+	padding: 0.5em 0 0.5em 0;
 }
