@@ -20,6 +20,13 @@ function fireChangeEvent(element){
 	element.dispatchEvent(evt);
 }
 
+function fireClickEvent(element){
+
+	var evt = document.createEvent("HTMLEvents");
+	evt.initEvent("click", false, true);
+	element.dispatchEvent(evt);
+}
+
 function runUp () {
 
 	anim_currentCount += anim_countStep;
@@ -201,6 +208,25 @@ function populateActivityList(activities){
 
 	_todayActivityList.innerHTML = html;
 
+
+	if(activities.length == 0){
+
+
+		console.log("No activities today");
+		
+		_todayActivityList.innerHTML = '<li class="noActivityTodayLi"><p class="noFoodTodayIcon"><i class="fa fa-info-circle"></i></p><p class="noFoodTodayp1">Aj kono activity log kora hoyni</p><p class="noFoodTodayp2">notun food log korte ekhane capun</p></li>';		
+
+		document.querySelector('.noActivityTodayLi').addEventListener('click', function(){
+
+			fireClickEvent(document.querySelector('#addButtonActivity'));
+
+		});
+
+		return;
+	}
+
+
+
 	$$('#todayActivityList li').hold(function(){
 
 		showActivityDeleteDiag(this.dataset.activitydesc, this.dataset.timestamp);
@@ -296,6 +322,8 @@ function populateTodayList(foods, first){
 		html += '</li>';
 
 		g_todaysTakenCalorie += parseInt(food.calorie);
+
+
 	}
 
 
@@ -321,6 +349,21 @@ function populateTodayList(foods, first){
 	_todayFoodList.innerHTML = html;
 
 
+	if(foods.length == 0){
+
+
+		console.log("No foods today");
+		
+		_todayFoodList.innerHTML = '<li class="noFoodTodayLi"><p class="noFoodTodayIcon"><i class="fa fa-info-circle"></i></p><p class="noFoodTodayp1">Aj kono food log kora hoyni</p><p class="noFoodTodayp2">notun food log korte ekhane capun</p></li>';		
+
+		document.querySelector('.noFoodTodayLi').addEventListener('click', function(){
+
+			fireClickEvent(document.querySelector('#addButtonHome'));
+
+		});
+
+		return;
+	}
 
 
 	$$('#todayFoodList li').hold(function(){
@@ -688,7 +731,7 @@ document.querySelector('#homePage').className = 'left';
 
 			refreshActivitiesList();
 			document.querySelector('#diag-delete-activity').className = 'fade-out';
-		
+			
 
 		});
 
@@ -902,6 +945,9 @@ window.onload = function(){
 		localStorage['dailyCalorieNeed'] = g_dailyCalorieNeed = getDailyCalorieNeed(sex, weight, height, activity, age);
 
 		utils.status.show('Settings saved');
+		refreshTodaysList();
+		document.querySelector('#homePage').className = 'current';
+		document.querySelector('#settingsPage').className = 'right';
 
 
 
@@ -953,27 +999,60 @@ window.onload = function(){
 	});
 
 
-_btnActivityFinish.addEventListener('click', function(evt){
 
-	evt.preventDefault();
+	_startswalk.addEventListener('click', function(){
+		showActivityTimer('s_walk');
 
-	finishCurrentActivity(function(){
+	});
+	_startmwalk.addEventListener('click', function(){
+		showActivityTimer('m_walk');
 
-		if(document.querySelector('#suggestPage').className.search('current') >= 0){
-			refreshSuggestions();
-			console.log('from suggestions');
-			
-		} else {
-			refreshActivitiesList();
-			console.log('from Activities');
-		}
+	});
+	_startfwalk.addEventListener('click', function(){
+		showActivityTimer('f_walk');
 
-		document.querySelector('#confirm').className = 'fade-out';
+	});
+	_startcycle.addEventListener('click', function(){
+		showActivityTimer('cycle');
+
+	});
+	_startrun.addEventListener('click', function(){
+		showActivityTimer('run');
+
+	});
+	_startjog.addEventListener('click', function(){
+		showActivityTimer('jog');
+
+	});
+	_startswim.addEventListener('click', function(){
+		showActivityTimer('swim');
 
 	});
 
 
-});
+
+
+	_btnActivityFinish.addEventListener('click', function(evt){
+
+		evt.preventDefault();
+
+		finishCurrentActivity(function(){
+
+			if(document.querySelector('#suggestPage').className.search('current') >= 0){
+				refreshSuggestions();
+				console.log('from suggestions');
+				
+			} else {
+				refreshActivitiesList();
+				console.log('from Activities');
+			}
+
+			document.querySelector('#confirm').className = 'fade-out';
+
+		});
+
+
+	});
 
 
 

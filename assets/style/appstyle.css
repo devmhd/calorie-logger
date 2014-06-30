@@ -14,61 +14,7 @@ select{
 	padding: 1rem;
 }
 
-/*
-html{
 
-		display: flex;
-	flex-direction: column;
-	padding: 0;
-
-}
-
-
-body{
-	margin: 0;
-	padding: 0;
-	display: flex;
-	flex-direction: column;
-	font-family: 'OpenSansLight'
-
-}
-
-div{
-	display: flex;
-	flex-direction: column;
-	margin: 0;
-	padding: 0;
-}
-
-section[role="region"] > header:first-child h1 {
-    font-style: normal;
-    text-align: left;
-}
-
-section[role="region"] > header:first-child menu .fa{
-	font-size: 1.3em;
-	color: white;
-}
-
-[data-type="list"] {
-    padding: 0;
-}
-
-[data-type="list"] header {
-    padding: 0 1.5rem;
-    border-bottom: 1px solid #FF4E00;
-  
-}
-
-[data-type="list"] ul {
-    padding: 0px 1.5rem;
-
-}
-
-section[role="region"] > header:first-child a, section[role="region"] > header:first-child button {
-    min-width: 2rem;
-}
-*/
 .bigCalCount{
 
 	font-size: 1.3em;
@@ -82,7 +28,7 @@ section[role="region"] > header:first-child a, section[role="region"] > header:f
 }
 
 .bigCalCount span#todayTotalCalCount,
-.bigCalCount span#todayTotalActivityCount\
+.bigCalCount span#todayTotalActivityCount
 {
 	font-size: 2em;
 	color: #008EAB;
@@ -110,15 +56,6 @@ section[role="region"] > header:first-child a, section[role="region"] > header:f
 	font-size: 0.8em;
 }
 
-/*.foodlist header h6{
-	background: #2C393B;
-	padding: 10px;
-	margin: 0;
-	font-size: 1em;
-	color: white;
-	text-align: center;
-}*/
-
 .liCalCount{
 font-size: 1.6em;
 padding: 2rem;
@@ -135,7 +72,29 @@ section[role="region"] .content [data-type="list"] header {
     border-bottom: 1px solid #f97c17;
 }
 
+.noFoodTodayIcon{
+	text-align: center;
+	
+}
 
+.noFoodTodayIcon i.fa{
+	padding-top: 0.5em;
+	color: #999;
+	font-size: 3.5em;
+}
+
+.noFoodTodayLi, .noActivityTodayLi{
+	height: auto !important;
+	padding-bottom: 2em;
+}
+
+.noFoodTodayp1{
+	text-align: center;
+}
+
+.noFoodTodayp2{
+	text-align: center;
+}
 
 
 .calPerFood h2{
@@ -191,10 +150,7 @@ h1.suggestHeader{
 	display: none;
 }
 
-#btnSeeHistory{
 
-	margin-top: 1em;
-}
 
 
 form[role="dialog"][data-type="confirm"] > section {

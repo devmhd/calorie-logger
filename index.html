@@ -19,7 +19,12 @@
   <link href="assets/buildingblocks/style/action_menu.css" rel="stylesheet" type="text/css">
 
   <link rel="stylesheet" href="assets/style/animate.css">
+  <link rel="stylesheet" href="assets/style/font-awesome.min.css">
+
+
   <link rel="stylesheet" href="assets/style/appstyle.css">
+
+
   <link href="assets/buildingblocks/default.css" rel="stylesheet" type="text/css">
 
 </head>
@@ -50,6 +55,7 @@
       <section data-type="list">
         <header>আজ গৃহীত খাবার</header>
         <ul id='todayFoodList'>
+          
         </ul>
         <button id='btnSeeHistory'>আরও আগের খাবার দেখুন</button>
 
@@ -89,6 +95,7 @@
       <section data-type="list">
         <header>আজ activities</header>
         <ul id='todayActivityList'>
+        
         </ul>
         <button id='btnSeeActivityHistory'>আরও আগের খাবার দেখুন</button>
 
@@ -165,7 +172,7 @@
   <header class="fixed">
     <button id='backButtonHistory'><span class="icon icon-back">close</span></button>
      <menu type="toolbar">
-       <a id='addButtonHome' href="#"><span class="icon icon-chart">See Chart</span></a>
+       <a id='btnSeeChartsFood' href="#"><span class="icon icon-chart">See Chart</span></a>
      </menu>
     <h1>সব খাবার</h1>
   </header>
@@ -189,7 +196,7 @@
   <header class="fixed">
     <button id='backButtonActivityHistory'><span class="icon icon-back">close</span></button>
      <menu type="toolbar">
-       <a id='addButtonHome' href="#"><span class="icon icon-chart">See Chart</span></a>
+       <a id='btnSeeChartsActivity' href="#"><span class="icon icon-chart">See Chart</span></a>
      </menu>
     <h1>সব activity</h1>
   </header>
@@ -202,6 +209,25 @@
         </ul>
 
       </section>
+    </section>
+  </article>
+</section>
+
+
+
+
+<section role="region" id="chartsPage" data-position="right">
+
+  <header class="fixed">
+    <button id='backButtonActivityHistory'><span class="icon icon-back">close</span></button>
+    
+    <h1>chart</h1>
+  </header>
+
+  <article class="content scrollable header">
+    <section role="region">
+
+     Hello World
     </section>
   </article>
 </section>
@@ -341,15 +367,6 @@
   <article class="content scrollable header">
     <section role="region" class="suggestRegion">
     <h1 class='suggestHeader'>অতিরিক্ত <span id="extraCal">1000</span> KCal প্রশমিত করতে আপনি নিচের যেকোন একটি কাজ করতে পারেন । </h1>
-  <!--   <ul>
-      <li>1. <span id="swalktime">12</span> মিনিট ধীরে হাটা । <button id="startswalk">Start</button></li>
-      <li>2. <span id="mwalktime">12</span> মিনিট মধ্যম গতিতে হাটা । <button id="startmwalk">Start</button></li>
-      <li>3. <span id="fwalktime">12</span> মিনিট দ্রুত হাটা । <button id="startfwalk">Start</button></li>
-      <li>4. <span id="cycletime">12</span> মিনিট সাইকেল চালানো । <button id="startcycle">Start</button></li>
-      <li>5. <span id="runtime">12</span> মিনিট দৌড়ান । <button id="startrun">Start</button></li>
-      <li>6. <span id="jogtime">12</span> মিনিট জগিং । <button id="startjog">Start</button></li>
-      <li>7. <span id="swimtime">12</span> মিনিট সাতার। <button id="startswim">Start</button></li>
-    </ul> -->
 
     <table cellpadding="0" cellspacing="0">
       <tr>
