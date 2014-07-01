@@ -1,3 +1,83 @@
+function escapeRegExp(string) {
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+
+
+String.prototype.replaceAll = function(find, replace) {
+  return this.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+
+
+
+Number.prototype.banglafy = function()
+{
+    
+    console.log(this);
+	var str = "" + this;
+
+	str = str.replaceAll('0', '০')
+    		.replaceAll('1', '১')
+    		.replaceAll('2', '২')
+    		.replaceAll('3', '৩')
+    		.replaceAll('4', '৪')
+    		.replaceAll('5', '৫')
+    		.replaceAll('6', '৬')
+    		.replaceAll('7', '৭')
+    		.replaceAll('8', '৮')
+    		.replaceAll('9', '৯');
+
+	console.log(str);
+    return str;
+}
+
+
+String.prototype.banglafy = function()
+{
+    
+    console.log(this);
+	var str = this;
+
+	str = str.replaceAll('0', '০')
+    		.replaceAll('1', '১')
+    		.replaceAll('2', '২')
+    		.replaceAll('3', '৩')
+    		.replaceAll('4', '৪')
+    		.replaceAll('5', '৫')
+    		.replaceAll('6', '৬')
+    		.replaceAll('7', '৭')
+    		.replaceAll('8', '৮')
+    		.replaceAll('9', '৯');
+
+	console.log(str);
+    return str;
+}
+
+function toBanglaTime(string){
+
+	var str = string.banglafy();
+
+	str = str.replace('a few', 'কয়েক')
+            .replace('seconds', 'সেকেন্ড')
+            .replace('second', 'সেকেন্ড')
+            .replace('minutes', 'মিনিট')
+            .replace('minute', 'মিনিট')
+            .replace('hours', 'ঘন্টা')
+            .replace('hour', 'ঘন্টা')
+            .replace('days', 'দিন')
+            .replace('day', 'দিন')
+            .replace('months', 'মাস')
+            .replace('month', 'মাস')
+            .replace('years', 'বছর')
+            .replace('year', 'বছর')
+            .replace('an', 'এক')
+            .replace('ago', 'আগে')
+            .replace('a', 'এক');            
+
+    
+    return str;    
+
+
+}
 
 function getDailyCalorieNeed(sex, weight, height, activityLevel, age){
 
@@ -31,7 +111,7 @@ function runUp () {
 
 	anim_currentCount += anim_countStep;
 	if (anim_currentCount < anim_countMax) {
-		anim_domContainer.innerHTML = anim_currentCount;
+		anim_domContainer.innerHTML = anim_currentCount.banglafy();
 
 		if(anim_currentCount > anim_threshold){
 
@@ -87,7 +167,7 @@ function activityRun(){
 	else minString = "" + activityRunMinute;
 
 
-	_runningTimer.innerHTML = minString + ":" + secString;
+	_runningTimer.innerHTML = minString.banglafy() + ":" + secString.banglafy();
 
 	if(activityRunning){
 		setTimeout(activityRun, 10);
@@ -109,7 +189,7 @@ function prepareTimer(activityId){
 
 	runningAvtivityType = activityId;
 
-	_runningTimer.innerHTML = '00:00';
+	_runningTimer.innerHTML = '০০:০০';
 
 	if(navigator.mozApps)
 		cpuLock = navigator.requestWakeLock('cpu');
@@ -185,16 +265,16 @@ function populateActivityList(activities){
 		html += '<li data-timestamp=' + activity.timestamp + ' data-activitydesc="' + activity.activityName + ' (' + activity.duration + ')" >';
 		html += '<aside class="pack-end">';
 		html += '<div class="liCalCount">';
-		html += activity.calorie.toFixed(1) + '<span>KCal</span>';
+		html += activity.calorie.toFixed(1).banglafy() + '<span> কি.ক্যাল</span>';
 		html += '</div>';
 		html += '</aside>';
 		html += '<a href="#">';
-		html += '<p>' + activity.activityName + ' (' + activity.duration + ')' + '</p>';
+		html += '<p>' + activity.activityName + ' (' + activity.duration.banglafy() + ')' + '</p>';
 
 		timeStr = moment(parseInt(activity.timestamp)).startOf('second').fromNow();
 
 
-		html += '<p>' + timeStr + '</p>';
+		html += '<p>' + toBanglaTime(timeStr) + '</p>';
 		html += '</a>';
 		html += '</li>';
 
@@ -203,7 +283,7 @@ function populateActivityList(activities){
 
 
 
-	_todayTotalActivityCount.innerHTML = g_todaysSpentCalorie;
+	_todayTotalActivityCount.innerHTML = g_todaysSpentCalorie.banglafy();
 
 
 	_todayActivityList.innerHTML = html;
@@ -214,7 +294,7 @@ function populateActivityList(activities){
 
 		console.log("No activities today");
 		
-		_todayActivityList.innerHTML = '<li class="noActivityTodayLi"><p class="noFoodTodayIcon"><i class="fa fa-info-circle"></i></p><p class="noFoodTodayp1">Aj kono activity log kora hoyni</p><p class="noFoodTodayp2">notun food log korte ekhane capun</p></li>';		
+		_todayActivityList.innerHTML = '<li class="noActivityTodayLi"><p class="noFoodTodayIcon"><i class="fa fa-info-circle"></i></p><p class="noFoodTodayp1">আজ কোন কাজ করা হয়নি</p><p class="noFoodTodayp2">নতুন কাজ শুরু করতে এখানে চাপুন</p></li>';		
 
 		document.querySelector('.noActivityTodayLi').addEventListener('click', function(){
 
@@ -230,6 +310,7 @@ function populateActivityList(activities){
 	$$('#todayActivityList li').hold(function(){
 
 		showActivityDeleteDiag(this.dataset.activitydesc, this.dataset.timestamp);
+		navigator.vibrate(100);
 
 	});
 
@@ -308,7 +389,7 @@ function populateTodayList(foods, first){
 		html += '<li data-timestamp=' + food.timestamp + ' data-fooddesc="' + food.foodDesc + '" >';
 		html += '<aside class="pack-end">';
 		html += '<div class="liCalCount">';
-		html += food.calorie + '<span>KCal</span>';
+		html += food.calorie.banglafy() + '<span>  কি.ক্যাল</span>';
 		html += '</div>';
 		html += '</aside>';
 		html += '<a href="#">';
@@ -317,7 +398,7 @@ function populateTodayList(foods, first){
 		timeStr = moment(parseInt(food.timestamp)).startOf('second').fromNow();
 
 
-		html += '<p>' + food.timestamp + '</p>';
+		html += '<p>' + toBanglaTime(timeStr) + '</p>';
 		html += '</a>';
 		html += '</li>';
 
@@ -328,7 +409,7 @@ function populateTodayList(foods, first){
 
 
 
-	_todayTotalCalCount.innerHTML = g_todaysTakenCalorie;
+	_todayTotalCalCount.innerHTML = g_todaysTakenCalorie.banglafy();
 
 
 	if((g_todaysTakenCalorie > (g_dailyCalorieNeed + g_todaysSpentCalorie)) && !first){
@@ -338,12 +419,13 @@ function populateTodayList(foods, first){
 		_todayTotalCalCount.style.color = "red";
 		var btn = document.querySelector('#seeSuggestPage');
 		btn.style.display = 'block';
+		btn.className = 'animated '
 		
 		
 
 	}
 
-	_calorieNeedToday.innerHTML = parseInt(g_dailyCalorieNeed + g_todaysSpentCalorie).toFixed(0);
+	_calorieNeedToday.innerHTML = parseInt(g_dailyCalorieNeed + g_todaysSpentCalorie).banglafy();
 
 
 	_todayFoodList.innerHTML = html;
@@ -354,7 +436,7 @@ function populateTodayList(foods, first){
 
 		console.log("No foods today");
 		
-		_todayFoodList.innerHTML = '<li class="noFoodTodayLi"><p class="noFoodTodayIcon"><i class="fa fa-info-circle"></i></p><p class="noFoodTodayp1">Aj kono food log kora hoyni</p><p class="noFoodTodayp2">notun food log korte ekhane capun</p></li>';		
+		_todayFoodList.innerHTML = '<li class="noFoodTodayLi"><p class="noFoodTodayIcon"><i class="fa fa-info-circle"></i></p><p class="noFoodTodayp1">আজ কোন খাবার যোগ করা হয়নি</p><p class="noFoodTodayp2">নতুন খাবার যোগ করতে এখানে চাপুন</p></li>';		
 
 		document.querySelector('.noFoodTodayLi').addEventListener('click', function(){
 
@@ -370,7 +452,7 @@ function populateTodayList(foods, first){
 
 
 		showFoodDeleteDiag(this.dataset.fooddesc, this.dataset.timestamp);
-
+		navigator.vibrate(100);
 
 	});
 	
@@ -409,16 +491,16 @@ function populateActivityHistory(activities){
 		html += '<li data-timestamp=' + activity.timestamp + ' data-activitydesc="' + activity.activityName + ' (' + activity.duration + ')" >';
 		html += '<aside class="pack-end">';
 		html += '<div class="liCalCount">';
-		html += activity.calorie.toFixed(2) + '<span>KCal</span>';
+		html += activity.calorie.toFixed(2).banglafy() + '<span> কি.ক্যাল</span>';
 		html += '</div>';
 		html += '</aside>';
 		html += '<a href="#">';
-		html += '<p>' + activity.activityName + '</p>';
+		html += '<p>' + activity.activityName + ' (' + activity.duration.banglafy() + ')' + '</p>';
 
 		timeStr = moment(parseInt(activity.timestamp)).startOf('second').fromNow();
 
 
-		html += '<p>' + timeStr + '</p>';
+		html += '<p>' + toBanglaTime(timeStr) + '</p>';
 		html += '</a>';
 		html += '</li>';
 
@@ -446,7 +528,7 @@ function populateHistory(foods){
 		html += '<li>';
 		html += '<aside class="pack-end">';
 		html += '<div class="liCalCount">';
-		html += food.calorie + '<span>KCal</span>';
+		html += food.calorie.banglafy() + '<span> কি.ক্যাল</span>';
 		html += '</div>';
 		html += '</aside>';
 		html += '<a href="#">';
@@ -455,7 +537,7 @@ function populateHistory(foods){
 		timeStr = moment(parseInt(food.timestamp)).startOf('second').fromNow();
 
 
-		html += '<p>' + timeStr + '</p>';
+		html += '<p>' + toBanglaTime(timeStr) + '</p>';
 		html += '</a>';
 		html += '</li>';
 
@@ -474,17 +556,17 @@ function refreshSuggestions(){
 
 	var diff = g_todaysTakenCalorie - (g_dailyCalorieNeed + g_todaysSpentCalorie);
 
-	_extraCal.innerHTML = diff.toFixed(2);
+	_extraCal.innerHTML = diff.toFixed(2).banglafy();
 
 	var weight = parseFloat(localStorage['weight']);
 
-	_swalktime.innerHTML = parseInt(diff / (allActivities.s_walk.calorie * weight));
-	_mwalktime.innerHTML = parseInt(diff / (allActivities.m_walk.calorie * weight));
-	_fwalktime.innerHTML = parseInt(diff / (allActivities.f_walk.calorie * weight));
-	_jogtime.innerHTML = parseInt(diff / (allActivities.jog.calorie * weight));
-	_swimtime.innerHTML = parseInt(diff / (allActivities.swim.calorie * weight));
-	_runtime.innerHTML = parseInt(diff / (allActivities.run.calorie * weight));
-	_cycletime.innerHTML = parseInt(diff / (allActivities.cycle.calorie * weight));
+	_swalktime.innerHTML = parseInt(diff / (allActivities.s_walk.calorie * weight)).banglafy();
+	_mwalktime.innerHTML = parseInt(diff / (allActivities.m_walk.calorie * weight)).banglafy();
+	_fwalktime.innerHTML = parseInt(diff / (allActivities.f_walk.calorie * weight)).banglafy();
+	_jogtime.innerHTML = parseInt(diff / (allActivities.jog.calorie * weight)).banglafy();
+	_swimtime.innerHTML = parseInt(diff / (allActivities.swim.calorie * weight)).banglafy();
+	_runtime.innerHTML = parseInt(diff / (allActivities.run.calorie * weight)).banglafy();
+	_cycletime.innerHTML = parseInt(diff / (allActivities.cycle.calorie * weight)).banglafy();
 
 
 
@@ -740,6 +822,40 @@ document.querySelector('#homePage').className = 'left';
 
 
 
+	document.querySelector('#btnSeeChartsActivity').addEventListener('click', function(){
+
+		document.querySelector('#chartsPage').className = 'current';
+		document.querySelector('#activityhistoryPage').className = 'left';
+
+		cameToChartsFrom = 'a';
+
+	});
+
+	document.querySelector('#btnSeeChartsFood').addEventListener('click', function(){
+
+		document.querySelector('#chartsPage').className = 'current';
+		document.querySelector('#historyPage').className = 'left';
+
+		cameToChartsFrom = 'f';
+
+	});
+
+	document.querySelector('#backButtonChartsPage').addEventListener('click', function(){
+
+		if(cameToChartsFrom === 'a'){
+			document.querySelector('#chartsPage').className = 'left';
+			document.querySelector('#activityhistoryPage').className = 'current';
+		} else {
+
+			document.querySelector('#chartsPage').className = 'left';
+			document.querySelector('#historyPage').className = 'current';
+
+
+		}
+	});
+
+
+
 }
 
 
@@ -748,7 +864,7 @@ function prepareActivityStartButtons(){
 	var html = "";
 
 	for(var activityId in allActivities){
-		html += '<button id="btnStartActivity_' + activityId + '" ">' + allActivities[activityId].main_name + ' start </button>';
+		html += '<button id="btnStartActivity_' + activityId + '" ">' + allActivities[activityId].main_name + ' শুরু করুন </button>';
 
 
 	}
@@ -807,8 +923,8 @@ window.onload = function(){
 				g_todaysSpentCalorie = activityCalCount;
 				
 				refreshTodaysList(function(){
-					countUp("#todayTotalCalCount");
-				}, 	true);
+				//	countUp("#todayTotalCalCount");
+				}, 	false);
 
 			});
 
@@ -856,7 +972,7 @@ window.onload = function(){
 
 		selectedFood = currentFoods[parseInt(_slFood.options[_slFood.selectedIndex].value)];
 
-		_calPerUnit.innerHTML = selectedFood.food_calorie;
+		_calPerUnit.innerHTML = selectedFood.food_calorie.banglafy();
 
 		if (selectedFood.food_unit === 'টি') {
 
@@ -871,7 +987,7 @@ window.onload = function(){
 
 		for(var i=1; i<=10; ++i) {
 
-			html += "<option value=" + i + " >" + i + " " + selectedFood.food_unit + "</option>";
+			html += "<option value=" + i + " >" + i.banglafy() + " " + selectedFood.food_unit + "</option>";
 		}
 
 
@@ -890,7 +1006,7 @@ window.onload = function(){
 
 		var totalCalorie = amount * calPerUnit;
 
-		_singleFoodTotal.innerHTML = totalCalorie;
+		_singleFoodTotal.innerHTML = totalCalorie.banglafy();
 
 	});
 
@@ -903,7 +1019,7 @@ window.onload = function(){
 		var totalCalorie = amount * calPerUnit;
 
 
-		foodDesc = _slFoodAmount.options[_slFoodAmount.selectedIndex].value + " " + selectedFood.food_unit + " " + selectedFood.food_name;
+		foodDesc = _slFoodAmount.options[_slFoodAmount.selectedIndex].value.banglafy() + " " + selectedFood.food_unit + " " + selectedFood.food_name;
 
 
 
@@ -932,7 +1048,7 @@ window.onload = function(){
 		activity = parseFloat(_prefActivity.options[_prefActivity.selectedIndex].value);
 
 		if(isNaN(age) || isNaN(height) || isNaN(weight)){
-			utils.status.show('Please input correct values');
+			utils.status.show('সব তথ্য সঠিকভাবে দেয়া হয়নি');
 			return;
 		}
 
@@ -944,7 +1060,7 @@ window.onload = function(){
 
 		localStorage['dailyCalorieNeed'] = g_dailyCalorieNeed = getDailyCalorieNeed(sex, weight, height, activity, age);
 
-		utils.status.show('Settings saved');
+		utils.status.show('অপশনগুলো সংরক্ষণ করা হল');
 		refreshTodaysList();
 		document.querySelector('#homePage').className = 'current';
 		document.querySelector('#settingsPage').className = 'right';
@@ -965,7 +1081,7 @@ window.onload = function(){
 		activity = parseFloat(_welActivity.options[_welActivity.selectedIndex].value);
 
 		if(isNaN(age) || isNaN(height) || isNaN(weight)){
-			utils.status.show('Please input correct values');
+			utils.status.show('সব তথ্য সঠিকভাবে দেয়া হয়নি');
 			return;
 		}
 

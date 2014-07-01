@@ -63,13 +63,19 @@ color: #FF4E00;
 }
 
 .liCalCount span{
-	font-size: 0.6em;
+	font-size: 0.5em;
 }
 
 section[role="region"] .content [data-type="list"] header {
     margin: 0;
     margin-top: 1em;
     border-bottom: 1px solid #f97c17;
+}
+
+section[role="region"] > header:first-child h1 {
+
+	text-align: left;
+	font-style: normal;
 }
 
 .noFoodTodayIcon{
@@ -131,6 +137,7 @@ section[role="region"] .content [data-type="list"] header {
 
 .singleFoodCalCount small{
 	color: #979797;
+	font-size: 0.4em;
 }
 
 form h2{

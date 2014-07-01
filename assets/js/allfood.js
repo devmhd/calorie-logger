@@ -1,56 +1,56 @@
 var allActivities = {
    's_walk' : {
 
-      main_name: "slow walk",
-      name_ing: "walking slowly",
+      main_name: "ধীরে হাটা",
+      name_ing: "ধীরে হাটছেন",
       calorie: 0.06
 
    },
 
    'm_walk' : {
 
-      main_name: "walk",
-      name_ing: "walking",
+      main_name: "হাটা",
+      name_ing: "হাটছেন",
       calorie: 0.07
 
    },
 
    'f_walk' : {
       
-      main_name: "fast walk",
-      name_ing: "walking fast",
+      main_name: "দ্রুত হাটা",
+      name_ing: "দ্রুত হাটছেন",
       calorie: 0.08
 
    },
 
    'jog' : {
       
-      main_name: "jog",
-      name_ing: "jogging",
+      main_name: "জগিং",
+      name_ing: "জগিং করছেন",
       calorie: 0.15
 
    },
 
    'swim' : {
       
-      main_name: "swim",
-      name_ing: "swimming",
+      main_name: "সাতার",
+      name_ing: "সাতার কাটছেন",
       calorie: 0.12
 
    },
 
    'run' : {
       
-      main_name: "run",
-      name_ing: "running",
+      main_name: "দৌড়ানো",
+      name_ing: "দৌড়াচ্ছেন",
       calorie: 0.22
 
    },
 
    'cycle' : {
       
-      main_name: "cycle",
-      name_ing: "cycling",
+      main_name: "সাইকেল চালানো",
+      name_ing: "সাইকেল চালাচ্ছেন",
       calorie: 0.14
 
    }
